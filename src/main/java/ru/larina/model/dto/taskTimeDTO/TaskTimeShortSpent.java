@@ -8,6 +8,6 @@ import java.time.Duration;
 @Data
 @Builder
 public class TaskTimeShortSpent {
-    private Integer taskId;
+    private Long taskId;
     private Duration timeSpent;
 }

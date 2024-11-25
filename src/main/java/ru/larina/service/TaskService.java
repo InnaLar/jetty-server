@@ -1,37 +1,29 @@
 package ru.larina.service;
 
-import jakarta.persistence.EntityManager;
-import ru.larina.hibernate.EMFactory;
+import lombok.AllArgsConstructor;
+import ru.larina.mapper.TaskMapper;
+import ru.larina.model.dto.taskDTO.TaskCreationRequest;
+import ru.larina.model.dto.taskDTO.TaskCreationResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.User;
 import ru.larina.repository.TaskRepository;
+import ru.larina.repository.UserRepository;
 
-public class TaskService implements TaskRepository {
-    @Override
-    public Task get(Long id) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            return em.find(Task.class, id);
-        }
-    }
+import java.util.Optional;
+@AllArgsConstructor
+public class TaskService {
+    private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
-    @Override
-    public Task add(Task task) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            em.persist(task);
-            em.getTransaction().commit();
-            return task;
-        }
-    }
+    /*public TaskService(TaskRepository taskRepository, UserRepository userRepository) {
+        this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+    }*/
 
-    @Override
-    public Task update(Task task) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            Task taskToChange = this.get(task.getId());
-            taskToChange.setName(task.getName());
-            em.getTransaction().commit();
-            return taskToChange;
-        }
+    public TaskCreationResponse save(TaskCreationRequest request) {
+        Optional<User> user = userRepository.findById(request.getUserId());
+        Task task = TaskMapper.taskCreationRequestToTask(request, user.get());
+        Task taskAdded = taskRepository.save(task);
+        return TaskMapper.taskToTaskCreationResponse(taskAdded);
     }
 }

@@ -1,15 +1,18 @@
 package ru.larina.mapper;
 
 import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
 import ru.larina.model.dto.userClearDTO.UserTaskTimeClearResponse;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
 import ru.larina.model.dto.userDTO.UserRegistrationRequest;
 import ru.larina.model.dto.userDTO.UserRegistrationResponse;
+import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.TaskTime;
 import ru.larina.model.entity.User;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,28 +23,28 @@ public class UserMapper {
             .build();
     }
 
-    public static User UserPutRequestToUser(UserPutRequest rq) {
+    public static User userPutRequestToUser(UserPutRequest rq) {
         return User.builder()
             .id(rq.getId())
             .email(rq.getEmail())
             .build();
     }
 
-    public static UserRegistrationResponse UserToUserRegistrationResponse(User user) {
+    public static UserRegistrationResponse userToUserRegistrationResponse(User user) {
         return UserRegistrationResponse.builder()
             .id(user.getId())
             .eml(user.getEmail())
             .build();
     }
 
-    public static UserPutResponse UserToUserPutResponse(User user) {
+    public static UserPutResponse userToUserPutResponse(User user) {
         return UserPutResponse.builder()
             .id(user.getId())
             .eml(user.getEmail())
             .build();
     }
 
-    public static UserTaskTimeClearResponse UserToUserTaskTimeClearResponse(User user) {
+    public static UserTaskTimeClearResponse userToUserTaskTimeClearResponse(User user) {
         List<TaskTimeId> timeIds = new ArrayList<>();
         for(Task task: user.getTasks())
             for(TaskTime taskTime: task.getTaskTimes()) {
@@ -52,6 +55,21 @@ public class UserMapper {
         return UserTaskTimeClearResponse.builder()
             .userId(user.getId())
             .taskTimeIds(timeIds)
+            .build();
+    }
+
+    public static UserTaskEffortResponse userToUserTaskEffortResponse(User user) {
+        List<TaskTimeShortSpent> taskTimeShortSpents = new ArrayList<>();
+        for(Task task: user.getTasks())
+            for(TaskTime taskTime: task.getTaskTimes()) {
+                taskTimeShortSpents.add(TaskTimeShortSpent.builder()
+                        .taskId(taskTime.getTask().getId())
+                        .timeSpent(Duration.between(taskTime.getStartTime(), taskTime.getStopTime()))
+                    .build());
+            }
+        return UserTaskEffortResponse.builder()
+            .userId(user.getId())
+            .taskEfforts(taskTimeShortSpents)
             .build();
     }
 }

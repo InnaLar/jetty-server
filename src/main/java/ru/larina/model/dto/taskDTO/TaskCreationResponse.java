@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TaskRegistrationResponse {
+public class TaskCreationResponse {
     private Long id;
     private String nameTask;
     private Long userId;

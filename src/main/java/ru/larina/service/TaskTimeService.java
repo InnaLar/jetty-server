@@ -1,68 +1,50 @@
 package ru.larina.service;
 
-import jakarta.persistence.EntityManager;
-import ru.larina.hibernate.EMFactory;
+import lombok.AllArgsConstructor;
+import ru.larina.mapper.TaskTimeMapper;
+import ru.larina.mapper.UserMapper;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeResponse;
+import ru.larina.model.dto.userClearDTO.UserTaskTimeClearResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.TaskTime;
+import ru.larina.model.entity.User;
+import ru.larina.repository.TaskRepository;
 import ru.larina.repository.TaskTimeRepository;
+import ru.larina.repository.UserRepository;
 
-public class TaskTimeService implements TaskTimeRepository {
-    TaskService taskService = new TaskService();
+import java.time.LocalDateTime;
 
-    @Override
-    public TaskTime get(Long id) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            return em.find(TaskTime.class, id);
-        }
+@AllArgsConstructor
+public class TaskTimeService {
+    TaskTimeRepository taskTimeRepository;
+    TaskRepository taskRepository;
+    UserRepository userRepository;
+
+    public TaskTimeResponse start(Long taskId) {
+        TaskTime taskTime = TaskTime.builder()
+            .task(taskRepository.findById(taskId).get())
+            .startTime(LocalDateTime.now())
+            .build();
+        TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
+        return TaskTimeMapper.TaskTimeToTaskTimeResponse(taskTimeAdded);
     }
 
-    @Override
-    public TaskTime getLast(Long taskId) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            Task task = taskService.get(taskId);
-            Long taskTimeId = (Long) em.createQuery(
-                    "select max(id) " +
-                        "from TaskTime tt " +
-                        "where tt.task = :task")
-                .setParameter("task", task)
-                .getSingleResult();
-            return this.get(taskTimeId);
-        }
+    public TaskTimeResponse stop(Long taskId) {
+        TaskTime taskTime = TaskTime.builder()
+            .task(taskRepository.findById(taskId).get())
+            .stopTime(LocalDateTime.now())
+            .build();
+        TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
+        return TaskTimeMapper.TaskTimeToTaskTimeResponse(taskTimeAdded);
     }
 
-    @Override
-    public TaskTime add(TaskTime taskTime) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            em.persist(taskTime);
-            em.getTransaction().commit();
-            return taskTime;
+    public UserTaskTimeClearResponse clear(Long userId) {
+        User user = userRepository.findById(userId).get();
+        for (Task task : user.getTasks()) {
+            for(TaskTime taskTime: task.getTaskTimes()){
+                taskTimeRepository.clear(taskTime);
+            }
         }
-    }
-
-    @Override
-    public TaskTime update(TaskTime taskTime) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            TaskTime taskToChange = this.get(taskTime.getId());
-            taskToChange.setStartTime(taskTime.getStartTime());
-            taskToChange.setStopTime(taskTime.getStopTime());
-            em.merge(taskToChange);
-            em.getTransaction().commit();
-            return taskToChange;
-        }
-    }
-
-    @Override
-    public TaskTime clear(TaskTime taskTime) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            TaskTime taskToChange = this.get(taskTime.getId());
-            taskToChange.setStartTime(null);
-            taskToChange.setStopTime(null);
-            em.merge(taskToChange);
-            em.getTransaction().commit();
-            return taskToChange;
-        }
+        return UserMapper.userToUserTaskTimeClearResponse(user);
     }
 }

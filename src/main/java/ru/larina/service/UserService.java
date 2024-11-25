@@ -1,52 +1,34 @@
 package ru.larina.service;
 
-import jakarta.persistence.EntityManager;
-import ru.larina.hibernate.EMFactory;
-import ru.larina.model.entity.Task;
-import ru.larina.model.entity.TaskTime;
+import lombok.AllArgsConstructor;
+import ru.larina.mapper.UserMapper;
+import ru.larina.model.dto.userDTO.UserPutRequest;
+import ru.larina.model.dto.userDTO.UserPutResponse;
+import ru.larina.model.dto.userDTO.UserRegistrationRequest;
+import ru.larina.model.dto.userDTO.UserRegistrationResponse;
+import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
+import ru.larina.model.dto.userReportDTO.UserTimeRequest;
 import ru.larina.model.entity.User;
 import ru.larina.repository.UserRepository;
 
-public class UserService implements UserRepository {
-    @Override
-    public User get(Long id) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            return em.find(User.class, id);
-        }
+@AllArgsConstructor
+public class UserService {
+    final private UserRepository userRepository;
+
+    public UserRegistrationResponse save(UserRegistrationRequest request) {
+        User user = UserMapper.UserRegistrationRequestToUser(request);
+        User userSaved = userRepository.save(user);
+        return UserMapper.userToUserRegistrationResponse(userSaved);
     }
 
-    @Override
-    public User add(User user) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            em.persist(user);
-            em.getTransaction().commit();
-            return user;
-        }
+    public UserPutResponse update(UserPutRequest request) {
+        User user = UserMapper.userPutRequestToUser(request);
+        User userUpdated = userRepository.save(user);
+        return UserMapper.userToUserPutResponse(userUpdated);
     }
 
-    @Override
-    public User update(User user) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            User userToChange = this.get(user.getId());
-            userToChange.setEmail(user.getEmail());
-            em.getTransaction().commit();
-            return userToChange;
-        }
-    }
-
-    @Override
-    public void clearTaskTimes(User user) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            em.find(User.class, user.getId());
-            for (Task task : user.getTasks()) {
-                for (TaskTime taskTime : task.getTaskTimes()) {
-                    task.removeTaskTime(taskTime);
-                }
-            }
-            em.getTransaction().commit();
-        }
+    public UserTaskEffortResponse getUserTaskEffort(Long userId) {
+        User user = userRepository.findById(userId).get();
+        return UserMapper.userToUserTaskEffortResponse(user);
     }
 }

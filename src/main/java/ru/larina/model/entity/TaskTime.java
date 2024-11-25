@@ -30,6 +30,8 @@ public class TaskTime extends BaseEntity {
     private LocalDateTime startTime;
     @Column(name = "stop_time")
     private LocalDateTime stopTime;
+    @Column(name = "ds")
+    private boolean disabled;
 
     @Override
     public boolean equals(Object o) {
