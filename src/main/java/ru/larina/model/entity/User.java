@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class User extends BaseEntity {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
     public void addTask(Task task) {

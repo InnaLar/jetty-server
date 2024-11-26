@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.mapper.MapperJson;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
 import ru.larina.model.dto.userDTO.UserRegistrationRequest;
@@ -31,7 +30,7 @@ public class UserServlet extends HttpServlet {
             jsonData = scanner.useDelimiter("\\A").next();
         }
         UserRegistrationRequest userRegistrationRequest = objectMapper.readValue(jsonData, UserRegistrationRequest.class);
-        UserRegistrationResponse userRegistrationResponse = userService.save(userRegistrationRequest);
+        UserRegistrationResponse userRegistrationResponse = userService.create(userRegistrationRequest);
         String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
         printJSON(resp, jsonString);
     }

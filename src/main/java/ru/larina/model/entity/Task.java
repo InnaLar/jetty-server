@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,6 +37,7 @@ public class Task extends BaseEntity {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @Builder.Default
     private List<TaskTime> taskTimes = new ArrayList<>();
 
     @Override
@@ -54,9 +56,10 @@ public class Task extends BaseEntity {
         return getClass().hashCode();
     }
 
-    public void addTaskTime(TaskTime taskTime) {
+    public Task withTaskTime(TaskTime taskTime) {
         taskTimes.add(taskTime);
         taskTime.setTask(this);
+        return this;
     }
 
     public void removeTaskTime(TaskTime taskTime) {

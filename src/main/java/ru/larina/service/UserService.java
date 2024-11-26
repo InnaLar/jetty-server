@@ -7,7 +7,6 @@ import ru.larina.model.dto.userDTO.UserPutResponse;
 import ru.larina.model.dto.userDTO.UserRegistrationRequest;
 import ru.larina.model.dto.userDTO.UserRegistrationResponse;
 import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
-import ru.larina.model.dto.userReportDTO.UserTimeRequest;
 import ru.larina.model.entity.User;
 import ru.larina.repository.UserRepository;
 
@@ -15,7 +14,8 @@ import ru.larina.repository.UserRepository;
 public class UserService {
     final private UserRepository userRepository;
 
-    public UserRegistrationResponse save(UserRegistrationRequest request) {
+    public UserRegistrationResponse create(UserRegistrationRequest request) {
+        //todo методы маппера должны быть нестатическими
         User user = UserMapper.UserRegistrationRequestToUser(request);
         User userSaved = userRepository.save(user);
         return UserMapper.userToUserRegistrationResponse(userSaved);

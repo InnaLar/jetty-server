@@ -26,31 +26,14 @@ public class UserRepositoryImpl implements UserRepository {
             if (user.getId() == null) {
                 em.persist(user);
             } else {
-                Optional<User> userToChange = findById(user.getId());
-                if (userToChange.isPresent()) {
-                    User userGot = userToChange.get();
-                    userGot.setEmail(user.getEmail());
-                    em.merge(userGot);
-                    user = userGot;
-                } else {
-                    throw new ServiceException(ErrorCode.ERR_CODE_002, user.getId());
-                }
+               user =  em.merge(user);
             }
             em.getTransaction().commit();
             return user;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
         }
     }
-
-    /*@Override
-    public User update(User user) {
-        try (EntityManager em = EMFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            User userToChange = this.get(user.getId());
-            userToChange.setEmail(user.getEmail());
-            em.getTransaction().commit();
-            return userToChange;
-        }
-    }*/
 
     @Override
     public void clearTaskTimes(User user) {

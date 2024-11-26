@@ -24,11 +24,11 @@ public class TaskTimeRepositoryImpl implements TaskTimeRepository {
     @Override
     public TaskTime findFirstByTaskIdOrderByIdDesc(Long taskId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            Optional<Task> task = taskRepository.findById(taskId);
+            //HQL todo only TaskTime
             Long taskTimeId = (Long) em.createQuery(
-                    "select max(id) " +
+                    "select  " +
                         "from TaskTime tt " +
-                        "where tt.task = :task")
+                        "where tt.task_id = :taskId")
                 .setParameter("task", task.get())
                 .getSingleResult();
             return this.findById(taskTimeId).get();
@@ -47,13 +47,10 @@ public class TaskTimeRepositoryImpl implements TaskTimeRepository {
     public TaskTime save(TaskTime taskTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            if (taskTime.getId() == null && taskTime.getStopTime() == null) {
+            if (taskTime.getId() == null) {
                 em.persist(taskTime);
             } else {
-                TaskTime taskTimeLast = findFirstByTaskIdOrderByIdDesc(taskTime.getTask().getId());
-                taskTimeLast.setStopTime(taskTime.getStopTime());
-                em.merge(taskTimeLast);
-                taskTime = taskTimeLast;
+                taskTime = em.merge(taskTime);
             }
             em.getTransaction().commit();
             return taskTime;

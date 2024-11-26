@@ -1,6 +1,8 @@
 package ru.larina.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
+import ru.larina.hibernate.EmFactory;
 import ru.larina.mapper.TaskTimeMapper;
 import ru.larina.mapper.UserMapper;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeResponse;
@@ -21,27 +23,30 @@ public class TaskTimeService {
     UserRepository userRepository;
 
     public TaskTimeResponse start(Long taskId) {
+        Task task = taskRepository.findById(taskId).get();
         TaskTime taskTime = TaskTime.builder()
-            .task(taskRepository.findById(taskId).get())
+            .task(task)
             .startTime(LocalDateTime.now())
             .build();
-        TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
-        return TaskTimeMapper.TaskTimeToTaskTimeResponse(taskTimeAdded);
+        taskTimeRepository.save(taskTime);
+        return TaskTimeMapper.TaskTimeToTaskTimeResponse(taskTime);
     }
 
     public TaskTimeResponse stop(Long taskId) {
-        TaskTime taskTime = TaskTime.builder()
-            .task(taskRepository.findById(taskId).get())
-            .stopTime(LocalDateTime.now())
-            .build();
-        TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
-        return TaskTimeMapper.TaskTimeToTaskTimeResponse(taskTimeAdded);
+        TaskTime taskTime;
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            em.getTransaction().begin();
+            taskTime = taskTimeRepository.findFirstByTaskIdOrderByIdDesc(taskId);
+            taskTime.setStopTime(LocalDateTime.now());
+            em.getTransaction().commit();;
+        }
+        return TaskTimeMapper.TaskTimeToTaskTimeResponse(taskTime);
     }
 
     public UserTaskTimeClearResponse clear(Long userId) {
         User user = userRepository.findById(userId).get();
         for (Task task : user.getTasks()) {
-            for(TaskTime taskTime: task.getTaskTimes()){
+            for (TaskTime taskTime : task.getTaskTimes()) {
                 taskTimeRepository.clear(taskTime);
             }
         }
