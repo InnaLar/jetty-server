@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @Builder
 public class UserWorkIntervalsResponse {
-    private Integer userId;
+    private Long userId;
     private List<TaskTimeLongSpent> workIntervals;
 }

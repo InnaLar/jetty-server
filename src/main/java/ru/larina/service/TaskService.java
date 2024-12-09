@@ -6,8 +6,10 @@ import ru.larina.exception.ServiceException;
 import ru.larina.mapper.TaskMapper;
 import ru.larina.model.dto.taskDTO.TaskCreationRequest;
 import ru.larina.model.dto.taskDTO.TaskCreationResponse;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
 import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
+import ru.larina.model.dto.userReportDTO.UserWorkIntervalsResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.User;
 import ru.larina.repository.TaskRepository;
@@ -15,7 +17,7 @@ import ru.larina.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 @AllArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
@@ -30,11 +32,19 @@ public class TaskService {
         return taskMapper.taskToTaskCreationResponse(taskAdded);
     }
 
-    public UserTaskEffortResponse getUserTaskEffortResponse(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
-        List<TaskTimeShortSpent> taskTimeShortSpents = taskRepository.getUserTaskEfforts(userId, startTime, stopTime);
+    public UserTaskEffortResponse getUserTaskEffortByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+        List<TaskTimeShortSpent> taskTimeShortSpents = taskRepository.getUserTaskEffortsByPeriods(userId, startTime, stopTime);
         return UserTaskEffortResponse.builder()
             .userId(userId)
             .taskEfforts(taskTimeShortSpents)
+            .build();
+    }
+
+    public UserWorkIntervalsResponse getUserWorkIntervalByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+        List<TaskTimeLongSpent> taskTimeLongSpents = taskRepository.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
+        return UserWorkIntervalsResponse.builder()
+            .userId(userId)
+            .workIntervals(taskTimeLongSpents)
             .build();
     }
 }

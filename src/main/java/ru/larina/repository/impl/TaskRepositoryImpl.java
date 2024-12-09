@@ -5,6 +5,7 @@ import jakarta.persistence.Tuple;
 import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
 import ru.larina.hibernate.EmFactory;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
 import ru.larina.model.entity.Task;
 import ru.larina.repository.TaskRepository;
@@ -48,7 +49,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public List<TaskTimeShortSpent> getUserTaskEfforts(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+    public List<TaskTimeShortSpent> getUserTaskEffortsByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             List<Tuple> taskDTOs =
                 em.createQuery(
@@ -77,6 +78,31 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
             taskTimeShortSpents.sort((ts1, ts2) -> Math.toIntExact(ts2.getTimeSpent().toSeconds() - ts1.getTimeSpent().toSeconds()));
             return taskTimeShortSpents;
+        }
+    }
+
+    @Override
+    public List<TaskTimeLongSpent> getUserWorkIntervalByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            List<TaskTimeLongSpent> taskTimeLongSpents =
+                em.createQuery(
+                        """
+                                select new TaskTimeLongSpent(tt.task.id as taskId,
+                                 tt.startTime as startDateTime, tt.stopTime as stopDateTime,
+                                  coalesce(tt.stopTime, CURRENT_DATE) - tt.startTime as timeSpent)
+                                from TaskTime tt
+                                join tt.task t
+                                where t.user.id = :userId
+                                and tt.startTime > :startTime
+                                and coalesce(tt.stopTime, CURRENT_DATE) < :stopTime
+                                order by tt.startTime
+                            """, TaskTimeLongSpent.class)
+                    .setParameter("startTime", startTime)
+                    .setParameter("stopTime", stopTime)
+                    .setParameter("userId", userId)
+                    .getResultList();
+
+            return taskTimeLongSpents;
         }
     }
 }

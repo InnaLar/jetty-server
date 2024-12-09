@@ -35,8 +35,8 @@ public class TaskTimesService {
             .startTime(LocalDateTime.now())
             .build();
 
-        taskTimeRepository.save(taskTime);
-        return taskTimeMapper.TaskTimeToTaskTimeResponse(taskTime);
+        TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
+        return taskTimeMapper.TaskTimeToTaskTimeResponse(taskTimeAdded);
     }
 
     public TaskTimeResponse stop(Long taskId) {
@@ -45,6 +45,7 @@ public class TaskTimesService {
             TaskTime taskTime = taskTimeRepository.findFirstByTaskIdOrderByIdDesc(taskId)
                 .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_004, taskId));
             taskTime.setStopTime(LocalDateTime.now());
+            em.merge(taskTime);
             em.getTransaction().commit();
             return taskTimeMapper.TaskTimeToTaskTimeResponse(taskTime);
         }

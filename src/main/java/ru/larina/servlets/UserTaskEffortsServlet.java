@@ -26,9 +26,9 @@ public class UserTaskEffortsServlet extends HttpServlet {
         LocalDateTime startTime = LocalDateTime.parse(req.getParameter("startDateTime"), formatter);
         LocalDateTime stopTime = LocalDateTime.parse(req.getParameter("stopDateTime"), formatter);
 
-        UserTaskEffortResponse userTaskEffortResponse = taskService.getUserTaskEffortResponse(userId, startTime, stopTime);
+        UserTaskEffortResponse userTaskEffortResponse = taskService.getUserTaskEffortByPeriods(userId, startTime, stopTime);
 
-        String jsonString = objectMapper.writeValueAsString(userTaskEffortResponse  );
+        String jsonString = objectMapper.writeValueAsString(userTaskEffortResponse);
 
         printJSON(resp, jsonString);
     }
