@@ -1,10 +1,11 @@
 package ru.larina.servlets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.mapper.MapperJson;
+import ru.larina.service.ObjectMapperConfigured;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
 import ru.larina.model.dto.userReportDTO.UserWorkIntervalsResponse;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class UserWorkIntervalsServlet extends HttpServlet {
-    private MapperJson mapperJson;
+    private ObjectMapper objectMapper;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -36,7 +37,7 @@ public class UserWorkIntervalsServlet extends HttpServlet {
             .workIntervals(List.of(tts1, tts2))
             .build();
         // Преобразование объекта в JSON
-        String jsonString = mapperJson.dtoToJson(response);
+        String jsonString = objectMapper.writeValueAsString(response);
         resp.setStatus(jakarta.servlet.http.HttpServletResponse.SC_OK);
         resp.setContentType("text/html;charset=UTF-8");
         resp.getWriter().println(jsonString);

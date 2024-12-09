@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
 
     ERR_CODE_001("ERR.CODE.001", "User with id %s not found", 404),
-    ERR_CODE_002("ERR.CODE.002", "Can't process id %s", 400),
-    ERR_CODE_003("ERR.CODE.003", "Doc with id %s not found", 404);
+    ERR_CODE_002("ERR.CODE.002", "Task with id %s not found", 404),
+    ERR_CODE_003("ERR.CODE.003", "TaskTime with id %s not found", 404),
+    ERR_CODE_004("ERR.CODE.004", "No TaskTime has Task with id %s", 404);
 
     private final String code;
     private final String description;

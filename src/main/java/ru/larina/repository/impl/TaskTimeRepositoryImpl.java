@@ -5,14 +5,12 @@ import lombok.AllArgsConstructor;
 import ru.larina.hibernate.EmFactory;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.TaskTime;
-import ru.larina.repository.TaskRepository;
 import ru.larina.repository.TaskTimeRepository;
 
 import java.util.Optional;
 
 @AllArgsConstructor
 public class TaskTimeRepositoryImpl implements TaskTimeRepository {
-    private TaskRepository taskRepository;
 
     @Override
     public Optional<TaskTime> findById(Long id) {
@@ -22,16 +20,17 @@ public class TaskTimeRepositoryImpl implements TaskTimeRepository {
     }
 
     @Override
-    public TaskTime findFirstByTaskIdOrderByIdDesc(Long taskId) {
+    public  Optional<TaskTime> findFirstByTaskIdOrderByIdDesc(Long taskId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            //HQL todo only TaskTime
-            Long taskTimeId = (Long) em.createQuery(
-                    "select  " +
-                        "from TaskTime tt " +
-                        "where tt.task_id = :taskId")
-                .setParameter("task", task.get())
-                .getSingleResult();
-            return this.findById(taskTimeId).get();
+            return Optional.ofNullable(em.createQuery(
+                    """
+                        SELECT tt
+                        FROM TaskTime tt
+                        WHERE tt.task.id = :taskId
+                        ORDER BY tt.startTime DESC
+                        LIMIT 1""", TaskTime.class)
+                .setParameter("taskId", taskId)
+                .getSingleResult());
         }
     }
 

@@ -1,6 +1,8 @@
 package ru.larina.service;
 
 import lombok.AllArgsConstructor;
+import ru.larina.exception.ErrorCode;
+import ru.larina.exception.ServiceException;
 import ru.larina.mapper.UserMapper;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
@@ -12,23 +14,29 @@ import ru.larina.repository.UserRepository;
 
 @AllArgsConstructor
 public class UserService {
-    final private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
+    public UserRegistrationResponse getById(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, id));
+        return userMapper.userToUserRegistrationResponse(user);
+    }
     public UserRegistrationResponse create(UserRegistrationRequest request) {
-        //todo методы маппера должны быть нестатическими
-        User user = UserMapper.UserRegistrationRequestToUser(request);
+        User user = userMapper.UserRegistrationRequestToUser(request);
         User userSaved = userRepository.save(user);
-        return UserMapper.userToUserRegistrationResponse(userSaved);
+        return userMapper.userToUserRegistrationResponse(userSaved);
     }
 
     public UserPutResponse update(UserPutRequest request) {
-        User user = UserMapper.userPutRequestToUser(request);
+        User user = userMapper.userPutRequestToUser(request);
         User userUpdated = userRepository.save(user);
-        return UserMapper.userToUserPutResponse(userUpdated);
+        return userMapper.userToUserPutResponse(userUpdated);
     }
 
     public UserTaskEffortResponse getUserTaskEffort(Long userId) {
-        User user = userRepository.findById(userId).get();
-        return UserMapper.userToUserTaskEffortResponse(user);
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
+        return userMapper.userToUserTaskEffortResponse(user);
     }
 }

@@ -24,6 +24,13 @@ public class UserServlet extends HttpServlet {
     private ObjectMapper objectMapper;
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserRegistrationResponse userRegistrationResponse = userService.getById(Long.valueOf(req.getParameter("userId")));
+        String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
+        printJSON(resp, jsonString);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String jsonData;
         try (Scanner scanner = new Scanner(req.getInputStream(), StandardCharsets.UTF_8)) {
