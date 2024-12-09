@@ -8,6 +8,6 @@ import java.time.Duration;
 @Data
 @Builder
 public class UserTotalWorkByPeriodResponse {
-    private Integer userId;
+    private Long userId;
     private Duration totalWork;
 }

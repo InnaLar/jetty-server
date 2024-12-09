@@ -16,7 +16,6 @@ import ru.larina.repository.impl.TaskRepositoryImpl;
 import ru.larina.repository.impl.TaskTimeRepositoryImpl;
 import ru.larina.repository.impl.UserRepositoryImpl;
 import ru.larina.service.ObjectMapperConfigured;
-import ru.larina.service.SecondToDuration;
 import ru.larina.service.TaskService;
 import ru.larina.service.TaskTimesService;
 import ru.larina.service.UserService;
@@ -75,8 +74,8 @@ public class SimpleHttpServer {
         handler.addServlet(new ServletHolder(new TaskTimeClearServlet(taskTimeService, objectMapper)), "/api/v1/task-time/clear");
         handler.addServlet(new ServletHolder(new UserTaskEffortsServlet(taskService, objectMapper)), "/api/v1/report/getUserTaskEfforts");
         handler.addServlet(new ServletHolder(new UserWorkIntervalsServlet(taskService, objectMapper)), "/api/v1/report/getUserWorkIntervalsByPeriod");
-        handler.addServlet(new ServletHolder(new UserTotalWorkServlet(objectMapper)), "/api/v1/report/getUserTotalWorkByPeriod");
-        handler.addServlet(new ServletHolder(new UserClearServlet(objectMapper)), "/api/v1/user/clear");
+        handler.addServlet(new ServletHolder(new UserTotalWorkServlet(taskService, objectMapper)), "/api/v1/report/getUserTotalWorkByPeriod");
+        handler.addServlet(new ServletHolder(new UserClearServlet(taskService, objectMapper)), "/api/v1/user/clear");
 
         // Запускаем сервер
         server.start();

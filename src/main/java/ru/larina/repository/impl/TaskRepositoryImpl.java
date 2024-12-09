@@ -2,12 +2,15 @@ package ru.larina.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
+import org.hibernate.query.Query;
 import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
 import ru.larina.hibernate.EmFactory;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
 import ru.larina.model.entity.Task;
+import ru.larina.model.entity.TaskTime;
 import ru.larina.repository.TaskRepository;
 import ru.larina.service.SecondToDuration;
 
@@ -103,6 +106,69 @@ public class TaskRepositoryImpl implements TaskRepository {
                     .getResultList();
 
             return taskTimeLongSpents;
+        }
+    }
+
+    @Override
+    public Duration getUserTotalWorkByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            Tuple timeSpent =
+                (Tuple) em.createQuery(
+                        """
+                                select sum(coalesce(tt.stopTime, CURRENT_DATE) - tt.startTime) as timeSpent
+                                from TaskTime tt
+                                join tt.task t
+                                where t.user.id = :userId
+                                and tt.startTime > :startTime
+                                and coalesce(tt.stopTime, CURRENT_DATE) < :stopTime
+                            """, Tuple.class)
+                    .setParameter("startTime", startTime)
+                    .setParameter("stopTime", stopTime)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+
+            Long nanoSecs = 0L;
+            if (timeSpent.get("timeSpent") != null) {
+                BigDecimal timeSpentNanoSecs = (BigDecimal) timeSpent.get("timeSpent");
+                nanoSecs = timeSpentNanoSecs.longValue();
+            }
+
+            return SecondToDuration.getDurationfromSeconds(nanoSecs);
+        }
+    }
+
+    @Override
+    public void clearTaskTimes(Long userId) {
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            em.getTransaction().begin();
+            Query query = (Query) em.createQuery(
+                    """
+                        update TaskTime tt
+                        set tt.disabled = true
+                        where tt.task = any (from Task t where t.user.id = :userId)
+                        """);
+            query.setParameter("userId", userId);
+            int count = query.executeUpdate();
+            em.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public List<TaskTimeId> getEmptyTaskTimeByUser(Long userId) {
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            List<TaskTimeId> taskTimeIds =
+                em.createQuery(
+                        """
+                                select new TaskTimeId(tt.id)
+                                from TaskTime tt
+                                join tt.task t
+                                where t.user.id = :userId
+                                and tt.disabled = true
+                            """, TaskTimeId.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
+
+            return taskTimeIds;
         }
     }
 }
