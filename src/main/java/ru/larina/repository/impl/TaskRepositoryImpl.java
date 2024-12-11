@@ -10,7 +10,6 @@ import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
 import ru.larina.model.entity.Task;
-import ru.larina.model.entity.TaskTime;
 import ru.larina.repository.TaskRepository;
 import ru.larina.service.SecondToDuration;
 
@@ -23,7 +22,7 @@ import java.util.Optional;
 
 public class TaskRepositoryImpl implements TaskRepository {
     @Override
-    public Optional<Task> findById(Long id) {
+    public Optional<Task> findById(final Long id) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             return Optional.ofNullable(em.find(Task.class, id));
         }
@@ -36,9 +35,9 @@ public class TaskRepositoryImpl implements TaskRepository {
             if (task.getId() == null) {
                 em.persist(task);
             } else {
-                Optional<Task> taskToChange = findById(task.getId());
+                final Optional<Task> taskToChange = findById(task.getId());
                 if (taskToChange.isPresent()) {
-                    Task taskGot = taskToChange.get();
+                    final Task taskGot = taskToChange.get();
                     taskGot.setName(task.getName());
                     em.merge(taskGot);
                     task = taskGot;
@@ -52,9 +51,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public List<TaskTimeShortSpent> getUserTaskEffortsByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+    public List<TaskTimeShortSpent> getUserTaskEffortsByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            List<Tuple> taskDTOs =
+            final List<Tuple> taskDtos =
                 em.createQuery(
                         """
                                 select tt.task.id as id, sum(coalesce(tt.stopTime, CURRENT_DATE) - tt.startTime) as timeSpent
@@ -69,13 +68,13 @@ public class TaskRepositoryImpl implements TaskRepository {
                     .setParameter("stopTime", stopTime)
                     .setParameter("userId", userId)
                     .getResultList();
-            List<TaskTimeShortSpent> taskTimeShortSpents = new ArrayList<>();
-            for (Tuple taskDTO : taskDTOs) {
-                BigDecimal secsDecimal = (BigDecimal) taskDTO.get("timeSpent");
-                Long nanoSecs = (secsDecimal).longValue();
-                Duration duration = SecondToDuration.getDurationfromSeconds(nanoSecs);
+            final List<TaskTimeShortSpent> taskTimeShortSpents = new ArrayList<>();
+            for (Tuple taskDto : taskDtos) {
+                final BigDecimal secsDecimal = (BigDecimal) taskDto.get("timeSpent");
+                final Long nanoSecs = secsDecimal.longValue();
+                final Duration duration = SecondToDuration.getDurationfromSeconds(nanoSecs);
                 taskTimeShortSpents.add(TaskTimeShortSpent.builder()
-                    .taskId((Long) taskDTO.get("id"))
+                    .taskId((Long) taskDto.get("id"))
                     .timeSpent(duration)
                     .build());
             }
@@ -85,9 +84,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public List<TaskTimeLongSpent> getUserWorkIntervalByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+    public List<TaskTimeLongSpent> getUserWorkIntervalByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            List<TaskTimeLongSpent> taskTimeLongSpents =
+            final List<TaskTimeLongSpent> taskTimeLongSpents =
                 em.createQuery(
                         """
                                 select new TaskTimeLongSpent(tt.task.id as taskId,
@@ -110,10 +109,10 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public Duration getUserTotalWorkByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
+    public Duration getUserTotalWorkByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            Tuple timeSpent =
-                (Tuple) em.createQuery(
+            final Tuple timeSpent =
+                em.createQuery(
                         """
                                 select sum(coalesce(tt.stopTime, CURRENT_DATE) - tt.startTime) as timeSpent
                                 from TaskTime tt
@@ -129,7 +128,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
             Long nanoSecs = 0L;
             if (timeSpent.get("timeSpent") != null) {
-                BigDecimal timeSpentNanoSecs = (BigDecimal) timeSpent.get("timeSpent");
+                final BigDecimal timeSpentNanoSecs = (BigDecimal) timeSpent.get("timeSpent");
                 nanoSecs = timeSpentNanoSecs.longValue();
             }
 
@@ -138,25 +137,25 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public void clearTaskTimes(Long userId) {
+    public void clearTaskTimes(final Long userId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            Query query = (Query) em.createQuery(
-                    """
-                        update TaskTime tt
-                        set tt.disabled = true
-                        where tt.task = any (from Task t where t.user.id = :userId)
-                        """);
+            final Query query = (Query) em.createQuery(
+                """
+                    update TaskTime tt
+                    set tt.disabled = true
+                    where tt.task = any (from Task t where t.user.id = :userId)
+                    """);
             query.setParameter("userId", userId);
-            int count = query.executeUpdate();
+            query.executeUpdate();
             em.getTransaction().commit();
         }
     }
 
     @Override
-    public List<TaskTimeId> getEmptyTaskTimeByUser(Long userId) {
+    public List<TaskTimeId> getEmptyTaskTimeByUser(final Long userId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            List<TaskTimeId> taskTimeIds =
+            final List<TaskTimeId> taskTimeIds =
                 em.createQuery(
                         """
                                 select new TaskTimeId(tt.id)

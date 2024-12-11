@@ -26,33 +26,33 @@ public class TaskTimesService {
     private final UserMapper userMapper;
     private final TaskTimeMapper taskTimeMapper;
 
-    public TaskTimeResponse start(Long taskId) {
-        Task task = taskRepository.findById(taskId)
+    public TaskTimeResponse start(final Long taskId) {
+        final Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, taskId));
 
-        TaskTime taskTime = TaskTime.builder()
+        final TaskTime taskTime = TaskTime.builder()
             .task(task)
             .startTime(LocalDateTime.now())
             .build();
 
-        TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
-        return taskTimeMapper.TaskTimeToTaskTimeResponse(taskTimeAdded);
+        final TaskTime taskTimeAdded = taskTimeRepository.save(taskTime);
+        return taskTimeMapper.taskTimeToTaskTimeResponse(taskTimeAdded);
     }
 
-    public TaskTimeResponse stop(Long taskId) {
+    public TaskTimeResponse stop(final Long taskId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            TaskTime taskTime = taskTimeRepository.findFirstByTaskIdOrderByIdDesc(taskId)
+            final TaskTime taskTime = taskTimeRepository.findFirstByTaskIdOrderByIdDesc(taskId)
                 .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_004, taskId));
             taskTime.setStopTime(LocalDateTime.now());
             em.merge(taskTime);
             em.getTransaction().commit();
-            return taskTimeMapper.TaskTimeToTaskTimeResponse(taskTime);
+            return taskTimeMapper.taskTimeToTaskTimeResponse(taskTime);
         }
     }
 
-    public UserTaskTimeClearResponse clear(Long userId) {
-        User user = userRepository.findById(userId)
+    public UserTaskTimeClearResponse clear(final Long userId) {
+        final User user = userRepository.findById(userId)
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
         for (Task task : user.getTasks()) {
             for (TaskTime taskTime : task.getTaskTimes()) {

@@ -11,8 +11,12 @@ import java.util.List;
 
 public interface TaskRepository extends CrudRepository<Task, Long> {
     List<TaskTimeShortSpent> getUserTaskEffortsByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime);
+
     List<TaskTimeLongSpent> getUserWorkIntervalByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime);
+
     Duration getUserTotalWorkByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime);
+
     void clearTaskTimes(Long userId);
+
     List<TaskTimeId> getEmptyTaskTimeByUser(Long userId);
 }

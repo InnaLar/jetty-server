@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import static ru.larina.server.SimpleHttpServer.printJSON;
+import static ru.larina.server.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class TaskServlet extends HttpServlet {
@@ -22,19 +22,15 @@ public class TaskServlet extends HttpServlet {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String jsonData;
-
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        final String jsonData;
         try (Scanner scanner = new Scanner(req.getInputStream(), StandardCharsets.UTF_8)) {
             jsonData = scanner.useDelimiter("\\A").next();
         }
-        TaskCreationRequest taskCreationRequest = objectMapper.readValue(jsonData, TaskCreationRequest.class);
-
-        TaskCreationResponse taskCreationResponse = taskService.save(taskCreationRequest);
-
-        String jsonString = objectMapper.writeValueAsString(taskCreationResponse);
-
-        printJSON(resp, jsonString);
+        final TaskCreationRequest taskCreationRequest = objectMapper.readValue(jsonData, TaskCreationRequest.class);
+        final TaskCreationResponse taskCreationResponse = taskService.save(taskCreationRequest);
+        final String jsonString = objectMapper.writeValueAsString(taskCreationResponse);
+        printJson(resp, jsonString);
 
     }
 }

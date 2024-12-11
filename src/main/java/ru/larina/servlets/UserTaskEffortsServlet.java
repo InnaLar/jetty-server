@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static ru.larina.server.SimpleHttpServer.printJSON;
+import static ru.larina.server.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserTaskEffortsServlet extends HttpServlet {
@@ -20,16 +20,13 @@ public class UserTaskEffortsServlet extends HttpServlet {
     private ObjectMapper objectMapper;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        Long userId = Long.valueOf(req.getParameter("userId"));
-        LocalDateTime startTime = LocalDateTime.parse(req.getParameter("startDateTime"), formatter);
-        LocalDateTime stopTime = LocalDateTime.parse(req.getParameter("stopDateTime"), formatter);
-
-        UserTaskEffortResponse userTaskEffortResponse = taskService.getUserTaskEffortByPeriods(userId, startTime, stopTime);
-
-        String jsonString = objectMapper.writeValueAsString(userTaskEffortResponse);
-
-        printJSON(resp, jsonString);
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        final Long userId = Long.valueOf(req.getParameter("userId"));
+        final LocalDateTime startTime = LocalDateTime.parse(req.getParameter("startDateTime"), formatter);
+        final LocalDateTime stopTime = LocalDateTime.parse(req.getParameter("stopDateTime"), formatter);
+        final UserTaskEffortResponse userTaskEffortResponse = taskService.getUserTaskEffortByPeriods(userId, startTime, stopTime);
+        final String jsonString = objectMapper.writeValueAsString(userTaskEffortResponse);
+        printJson(resp, jsonString);
     }
 }

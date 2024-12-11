@@ -31,38 +31,39 @@ import ru.larina.servlets.UserWorkIntervalsServlet;
 
 import java.io.IOException;
 
+@SuppressWarnings("UncommentedMain")
 public class SimpleHttpServer {
 
-    public static void printJSON(HttpServletResponse resp, String jsonString) throws IOException {
+    public static void printJson(final HttpServletResponse resp, final String jsonString) throws IOException {
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/html;charset=UTF-8");
         resp.getWriter().println(jsonString);
         resp.getWriter().close();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
 
         // Создаём сервер на порту 8080
-        Server server = new Server(8080);
+        final Server server = new Server(8080);
 
         // Настраиваем контекст сервлетов
-        ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        final ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         handler.setContextPath("/");
 
-        ObjectMapperConfigured objectMapperConfigured = new ObjectMapperConfigured(new ObjectMapper());
-        ObjectMapper objectMapper = objectMapperConfigured.getObjectMapperConfigured();
+        final ObjectMapperConfigured objectMapperConfigured = new ObjectMapperConfigured(new ObjectMapper());
+        final ObjectMapper objectMapper = objectMapperConfigured.getObjectMapperConfigured();
 
-        TaskRepository taskRepository = new TaskRepositoryImpl();
-        UserRepository userRepository = new UserRepositoryImpl();
-        TaskTimeRepository taskTimeRepository = new TaskTimeRepositoryImpl();
+        final TaskRepository taskRepository = new TaskRepositoryImpl();
+        final UserRepository userRepository = new UserRepositoryImpl();
+        final TaskTimeRepository taskTimeRepository = new TaskTimeRepositoryImpl();
 
-        UserMapper userMapper = new UserMapper();
-        TaskMapper taskMapper = new TaskMapper();
-        TaskTimeMapper taskTimeMapper = new TaskTimeMapper();
+        final UserMapper userMapper = new UserMapper();
+        final TaskMapper taskMapper = new TaskMapper();
+        final TaskTimeMapper taskTimeMapper = new TaskTimeMapper();
 
-        UserService userService = new UserService(userRepository, userMapper);
-        TaskService taskService = new TaskService(taskRepository, userRepository, taskMapper);
-        TaskTimesService taskTimeService = new TaskTimesService(taskTimeRepository, taskRepository, userRepository, userMapper, taskTimeMapper);
+        final UserService userService = new UserService(userRepository, userMapper);
+        final TaskService taskService = new TaskService(taskRepository, userRepository, taskMapper);
+        final TaskTimesService taskTimeService = new TaskTimesService(taskTimeRepository, taskRepository, userRepository, userMapper, taskTimeMapper);
 
         // Добавляем сервлет для обработки запросов
         server.setHandler(handler);

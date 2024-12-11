@@ -16,42 +16,42 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import static ru.larina.server.SimpleHttpServer.printJSON;
+import static ru.larina.server.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserServlet extends HttpServlet {
-    private UserService userService;
-    private ObjectMapper objectMapper;
+    private final UserService userService;
+    private final ObjectMapper objectMapper;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserRegistrationResponse userRegistrationResponse = userService.getById(Long.valueOf(req.getParameter("userId")));
-        String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
-        printJSON(resp, jsonString);
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        final UserRegistrationResponse userRegistrationResponse = userService.getById(Long.valueOf(req.getParameter("userId")));
+        final String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
+        printJson(resp, jsonString);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String jsonData;
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServletException {
+        final String jsonData;
         try (Scanner scanner = new Scanner(req.getInputStream(), StandardCharsets.UTF_8)) {
             jsonData = scanner.useDelimiter("\\A").next();
         }
-        UserRegistrationRequest userRegistrationRequest = objectMapper.readValue(jsonData, UserRegistrationRequest.class);
-        UserRegistrationResponse userRegistrationResponse = userService.create(userRegistrationRequest);
-        String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
-        printJSON(resp, jsonString);
+        final UserRegistrationRequest userRegistrationRequest = objectMapper.readValue(jsonData, UserRegistrationRequest.class);
+        final UserRegistrationResponse userRegistrationResponse = userService.create(userRegistrationRequest);
+        final String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
+        printJson(resp, jsonString);
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String jsonData;
+    protected void doPut(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        final String jsonData;
         try (Scanner scanner = new Scanner(req.getInputStream(), StandardCharsets.UTF_8)) {
             jsonData = scanner.useDelimiter("\\A").next();
         }
         //jsonData = "{\"id\":\"123\",\"email\":\"InnaLar@mail.ru\"}";
-        UserPutRequest userPutRequest = objectMapper.readValue(jsonData, UserPutRequest.class);
-        UserPutResponse userPutResponse = userService.update(userPutRequest);
-        String jsonString = objectMapper.writeValueAsString(userPutResponse);
-        printJSON(resp, jsonString);
+        final UserPutRequest userPutRequest = objectMapper.readValue(jsonData, UserPutRequest.class);
+        final UserPutResponse userPutResponse = userService.update(userPutRequest);
+        final String jsonString = objectMapper.writeValueAsString(userPutResponse);
+        printJson(resp, jsonString);
     }
 }

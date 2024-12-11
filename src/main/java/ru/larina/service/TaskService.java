@@ -31,38 +31,38 @@ public class TaskService {
     public TaskCreationResponse save(TaskCreationRequest request) {
         User user = userRepository.findById(request.getUserId())
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, request.getUserId()));
-        Task task = taskMapper.taskCreationRequestToTask(request, user);
-        Task taskAdded = taskRepository.save(task);
+        final Task task = taskMapper.taskCreationRequestToTask(request, user);
+        final Task taskAdded = taskRepository.save(task);
         return taskMapper.taskToTaskCreationResponse(taskAdded);
     }
 
-    public UserTaskEffortResponse getUserTaskEffortByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
-        List<TaskTimeShortSpent> taskTimeShortSpents = taskRepository.getUserTaskEffortsByPeriods(userId, startTime, stopTime);
+    public UserTaskEffortResponse getUserTaskEffortByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
+        final List<TaskTimeShortSpent> taskTimeShortSpents = taskRepository.getUserTaskEffortsByPeriods(userId, startTime, stopTime);
         return UserTaskEffortResponse.builder()
             .userId(userId)
             .taskEfforts(taskTimeShortSpents)
             .build();
     }
 
-    public UserWorkIntervalsResponse getUserWorkIntervalByPeriods(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
-        List<TaskTimeLongSpent> taskTimeLongSpents = taskRepository.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
+    public UserWorkIntervalsResponse getUserWorkIntervalByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
+        final List<TaskTimeLongSpent> taskTimeLongSpents = taskRepository.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
         return UserWorkIntervalsResponse.builder()
             .userId(userId)
             .workIntervals(taskTimeLongSpents)
             .build();
     }
 
-    public UserTotalWorkByPeriodResponse getUserTotalWorkByPeriod(Long userId, LocalDateTime startTime, LocalDateTime stopTime) {
-        Duration timeSpent = taskRepository.getUserTotalWorkByPeriods(userId, startTime, stopTime);
+    public UserTotalWorkByPeriodResponse getUserTotalWorkByPeriod(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
+        final Duration timeSpent = taskRepository.getUserTotalWorkByPeriods(userId, startTime, stopTime);
         return UserTotalWorkByPeriodResponse.builder()
             .userId(userId)
             .totalWork(timeSpent)
             .build();
     }
 
-    public UserTaskTimeClearResponse userClearTaskTimes(Long userId) {
+    public UserTaskTimeClearResponse userClearTaskTimes(final Long userId) {
         taskRepository.clearTaskTimes(userId);
-        List<TaskTimeId> taskTimeIds = taskRepository.getEmptyTaskTimeByUser(userId);
+        final List<TaskTimeId> taskTimeIds = taskRepository.getEmptyTaskTimeByUser(userId);
         return UserTaskTimeClearResponse.builder()
             .userId(userId)
             .taskTimeIds(taskTimeIds)

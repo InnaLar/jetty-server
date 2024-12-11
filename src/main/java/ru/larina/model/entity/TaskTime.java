@@ -34,9 +34,13 @@ public class TaskTime extends BaseEntity {
     private boolean disabled;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TaskTime )) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TaskTime)) {
+            return false;
+        }
         return this.getId() != null && this.getId().equals(((TaskTime) o).getId());
     }
 

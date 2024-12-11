@@ -11,7 +11,7 @@ import ru.larina.service.TaskTimesService;
 
 import java.io.IOException;
 
-import static ru.larina.server.SimpleHttpServer.printJSON;
+import static ru.larina.server.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class TaskTimeStartServlet extends HttpServlet {
@@ -19,10 +19,10 @@ public class TaskTimeStartServlet extends HttpServlet {
     private ObjectMapper objectMapper;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServiceException {
-        Long taskId = Long.valueOf(req.getParameter("taskId"));
-        TaskTimeResponse response = taskTimeService.start(taskId);
-        String jsonString = objectMapper.writeValueAsString(response);
-        printJSON(resp, jsonString);
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServiceException {
+        final Long taskId = Long.valueOf(req.getParameter("taskId"));
+        final TaskTimeResponse response = taskTimeService.start(taskId);
+        final String jsonString = objectMapper.writeValueAsString(response);
+        printJson(resp, jsonString);
     }
 }

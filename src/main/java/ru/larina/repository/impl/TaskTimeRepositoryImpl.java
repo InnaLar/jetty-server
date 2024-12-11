@@ -3,7 +3,6 @@ package ru.larina.repository.impl;
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.entity.Task;
 import ru.larina.model.entity.TaskTime;
 import ru.larina.repository.TaskTimeRepository;
 
@@ -13,14 +12,14 @@ import java.util.Optional;
 public class TaskTimeRepositoryImpl implements TaskTimeRepository {
 
     @Override
-    public Optional<TaskTime> findById(Long id) {
+    public Optional<TaskTime> findById(final Long id) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             return Optional.ofNullable(em.find(TaskTime.class, id));
         }
     }
 
     @Override
-    public  Optional<TaskTime> findFirstByTaskIdOrderByIdDesc(Long taskId) {
+    public Optional<TaskTime> findFirstByTaskIdOrderByIdDesc(final Long taskId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             return Optional.ofNullable(em.createQuery(
                     """
@@ -35,7 +34,7 @@ public class TaskTimeRepositoryImpl implements TaskTimeRepository {
     }
 
     @Override
-    public void clear(TaskTime taskTime) {
+    public void clear(final TaskTime taskTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             taskTime.setDisabled(true);
             em.merge(taskTime);

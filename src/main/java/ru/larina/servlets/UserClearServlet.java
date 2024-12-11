@@ -10,7 +10,7 @@ import ru.larina.service.TaskService;
 
 import java.io.IOException;
 
-import static ru.larina.server.SimpleHttpServer.printJSON;
+import static ru.larina.server.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserClearServlet extends HttpServlet {
@@ -18,10 +18,10 @@ public class UserClearServlet extends HttpServlet {
     private ObjectMapper objectMapper;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Long userId = Long.valueOf(req.getParameter("userId"));
-        UserTaskTimeClearResponse userTaskTimeClearResponse = taskService.userClearTaskTimes(userId);
-        String jsonString = objectMapper.writeValueAsString(userTaskTimeClearResponse);
-        printJSON(resp, jsonString);
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        final Long userId = Long.valueOf(req.getParameter("userId"));
+        final UserTaskTimeClearResponse userTaskTimeClearResponse = taskService.userClearTaskTimes(userId);
+        final String jsonString = objectMapper.writeValueAsString(userTaskTimeClearResponse);
+        printJson(resp, jsonString);
     }
 }

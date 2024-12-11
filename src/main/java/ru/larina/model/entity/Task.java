@@ -41,7 +41,7 @@ public class Task extends BaseEntity {
     private List<TaskTime> taskTimes = new ArrayList<>();
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -56,13 +56,13 @@ public class Task extends BaseEntity {
         return getClass().hashCode();
     }
 
-    public Task withTaskTime(TaskTime taskTime) {
+    public Task withTaskTime(final TaskTime taskTime) {
         taskTimes.add(taskTime);
         taskTime.setTask(this);
         return this;
     }
 
-    public void removeTaskTime(TaskTime taskTime) {
+    public void removeTaskTime(final TaskTime taskTime) {
         taskTimes.remove(taskTime);
         taskTime.setTask(null);
     }

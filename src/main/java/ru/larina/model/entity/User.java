@@ -36,12 +36,12 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
-    public void addTask(Task task) {
+    public void addTask(final Task task) {
         tasks.add(task);
         task.setUser(this);
     }
 
-    public void remove(Task task) {
+    public void remove(final Task task) {
         tasks.remove(task);
         task.setUser(null);
     }
