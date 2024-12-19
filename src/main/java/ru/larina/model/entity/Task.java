@@ -36,6 +36,7 @@ public class Task extends BaseEntity {
         mappedBy = "task",
         cascade = CascadeType.ALL,
         orphanRemoval = true
+
     )
     @Builder.Default
     private List<TaskTime> taskTimes = new ArrayList<>();

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
+import ru.larina.service.ReportService;
 import ru.larina.service.TaskService;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ import static ru.larina.server.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserTaskEffortsServlet extends HttpServlet {
-    private TaskService taskService;
+    private ReportService reportService;
     private ObjectMapper objectMapper;
 
     @Override
@@ -25,7 +26,7 @@ public class UserTaskEffortsServlet extends HttpServlet {
         final Long userId = Long.valueOf(req.getParameter("userId"));
         final LocalDateTime startTime = LocalDateTime.parse(req.getParameter("startDateTime"), formatter);
         final LocalDateTime stopTime = LocalDateTime.parse(req.getParameter("stopDateTime"), formatter);
-        final UserTaskEffortResponse userTaskEffortResponse = taskService.getUserTaskEffortByPeriods(userId, startTime, stopTime);
+        final UserTaskEffortResponse userTaskEffortResponse = reportService.getUserTaskEffortByPeriods(userId, startTime, stopTime);
         final String jsonString = objectMapper.writeValueAsString(userTaskEffortResponse);
         printJson(resp, jsonString);
     }

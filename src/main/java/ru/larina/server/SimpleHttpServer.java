@@ -16,6 +16,7 @@ import ru.larina.repository.impl.TaskRepositoryImpl;
 import ru.larina.repository.impl.TaskTimeRepositoryImpl;
 import ru.larina.repository.impl.UserRepositoryImpl;
 import ru.larina.service.ObjectMapperConfigured;
+import ru.larina.service.ReportService;
 import ru.larina.service.TaskService;
 import ru.larina.service.TaskTimesService;
 import ru.larina.service.UserService;
@@ -64,6 +65,7 @@ public class SimpleHttpServer {
         final UserService userService = new UserService(userRepository, userMapper);
         final TaskService taskService = new TaskService(taskRepository, userRepository, taskMapper);
         final TaskTimesService taskTimeService = new TaskTimesService(taskTimeRepository, taskRepository, userRepository, userMapper, taskTimeMapper);
+        final ReportService reportService = new ReportService(taskRepository);
 
         // Добавляем сервлет для обработки запросов
         server.setHandler(handler);
@@ -73,9 +75,9 @@ public class SimpleHttpServer {
         handler.addServlet(new ServletHolder(new TaskTimeStartServlet(taskTimeService, objectMapper)), "/api/v1/task-time/start");
         handler.addServlet(new ServletHolder(new TaskTimeStopServlet(taskTimeService, objectMapper)), "/api/v1/task-time/stop");
         handler.addServlet(new ServletHolder(new TaskTimeClearServlet(taskTimeService, objectMapper)), "/api/v1/task-time/clear");
-        handler.addServlet(new ServletHolder(new UserTaskEffortsServlet(taskService, objectMapper)), "/api/v1/report/getUserTaskEfforts");
-        handler.addServlet(new ServletHolder(new UserWorkIntervalsServlet(taskService, objectMapper)), "/api/v1/report/getUserWorkIntervalsByPeriod");
-        handler.addServlet(new ServletHolder(new UserTotalWorkServlet(taskService, objectMapper)), "/api/v1/report/getUserTotalWorkByPeriod");
+        handler.addServlet(new ServletHolder(new UserTaskEffortsServlet(reportService, objectMapper)), "/api/v1/report/getUserTaskEfforts");
+        handler.addServlet(new ServletHolder(new UserWorkIntervalsServlet(reportService, objectMapper)), "/api/v1/report/getUserWorkIntervalsByPeriod");
+        handler.addServlet(new ServletHolder(new UserTotalWorkServlet(reportService, objectMapper)), "/api/v1/report/getUserTotalWorkByPeriod");
         handler.addServlet(new ServletHolder(new UserClearServlet(taskService, objectMapper)), "/api/v1/user/clear");
 
         // Запускаем сервер

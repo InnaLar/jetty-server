@@ -52,13 +52,17 @@ public class TaskTimesService {
     }
 
     public UserTaskTimeClearResponse clear(final Long userId) {
-        final User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
-        for (Task task : user.getTasks()) {
-            for (TaskTime taskTime : task.getTaskTimes()) {
-                taskTimeRepository.clear(taskTime);
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            final User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
+            /*em.getTransaction().begin();
+            em.merge(user);*/
+            for (Task task : user.getTasks()) {
+                for (TaskTime taskTime : task.getTaskTimes()) {
+                    taskTimeRepository.clear(taskTime);
+                }
             }
+            return userMapper.userToUserTaskTimeClearResponse(user);
         }
-        return userMapper.userToUserTaskTimeClearResponse(user);
     }
 }

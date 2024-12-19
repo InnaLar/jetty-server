@@ -3,6 +3,7 @@ package ru.larina.service;
 import lombok.AllArgsConstructor;
 import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
+import ru.larina.mapper.ReportMapper;
 import ru.larina.mapper.TaskMapper;
 import ru.larina.model.dto.taskDTO.TaskCreationRequest;
 import ru.larina.model.dto.taskDTO.TaskCreationResponse;
@@ -15,9 +16,13 @@ import ru.larina.model.dto.userReportDTO.UserTotalWorkByPeriodResponse;
 import ru.larina.model.dto.userReportDTO.UserWorkIntervalsResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.User;
+import ru.larina.model.projections.TaskTimeLongSpentProjection;
+import ru.larina.model.projections.TaskTimeShortSpentProjection;
+import ru.larina.model.projections.TotalWorkByPeriodProjection;
 import ru.larina.repository.TaskRepository;
 import ru.larina.repository.UserRepository;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,30 +39,6 @@ public class TaskService {
         final Task task = taskMapper.taskCreationRequestToTask(request, user);
         final Task taskAdded = taskRepository.save(task);
         return taskMapper.taskToTaskCreationResponse(taskAdded);
-    }
-
-    public UserTaskEffortResponse getUserTaskEffortByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
-        final List<TaskTimeShortSpent> taskTimeShortSpents = taskRepository.getUserTaskEffortsByPeriods(userId, startTime, stopTime);
-        return UserTaskEffortResponse.builder()
-            .userId(userId)
-            .taskEfforts(taskTimeShortSpents)
-            .build();
-    }
-
-    public UserWorkIntervalsResponse getUserWorkIntervalByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
-        final List<TaskTimeLongSpent> taskTimeLongSpents = taskRepository.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
-        return UserWorkIntervalsResponse.builder()
-            .userId(userId)
-            .workIntervals(taskTimeLongSpents)
-            .build();
-    }
-
-    public UserTotalWorkByPeriodResponse getUserTotalWorkByPeriod(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
-        final Duration timeSpent = taskRepository.getUserTotalWorkByPeriods(userId, startTime, stopTime);
-        return UserTotalWorkByPeriodResponse.builder()
-            .userId(userId)
-            .totalWork(timeSpent)
-            .build();
     }
 
     public UserTaskTimeClearResponse userClearTaskTimes(final Long userId) {
