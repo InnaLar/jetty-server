@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import static ru.larina.server.SimpleHttpServer.printJson;
+import static ru.larina.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserServlet extends HttpServlet {
@@ -38,6 +38,10 @@ public class UserServlet extends HttpServlet {
         }
         final UserRegistrationRequest userRegistrationRequest = objectMapper.readValue(jsonData, UserRegistrationRequest.class);
         final UserRegistrationResponse userRegistrationResponse = userService.create(userRegistrationRequest);
+
+//        objectMapper.writeValue(resp.getWriter(), userRegistrationResponse);
+//        resp.setStatus(HttpServletResponse.SC_OK);
+
         final String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
         printJson(resp, jsonString);
     }

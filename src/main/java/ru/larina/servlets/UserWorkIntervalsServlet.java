@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static ru.larina.server.SimpleHttpServer.printJson;
+import static ru.larina.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserWorkIntervalsServlet extends HttpServlet {

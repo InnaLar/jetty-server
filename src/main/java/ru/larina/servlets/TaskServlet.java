@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import static ru.larina.server.SimpleHttpServer.printJson;
+import static ru.larina.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class TaskServlet extends HttpServlet {

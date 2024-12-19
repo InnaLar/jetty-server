@@ -7,13 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
 import ru.larina.service.ReportService;
-import ru.larina.service.TaskService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static ru.larina.server.SimpleHttpServer.printJson;
+import static ru.larina.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserTaskEffortsServlet extends HttpServlet {

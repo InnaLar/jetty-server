@@ -1,4 +1,4 @@
-package ru.larina.server;
+package ru.larina;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ public class SimpleHttpServer {
 
     public static void printJson(final HttpServletResponse resp, final String jsonString) throws IOException {
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.setContentType("text/html;charset=UTF-8");
+        resp.setContentType("application/json;charset=UTF-8");
         resp.getWriter().println(jsonString);
         resp.getWriter().close();
     }

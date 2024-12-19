@@ -10,7 +10,7 @@ import ru.larina.service.TaskService;
 
 import java.io.IOException;
 
-import static ru.larina.server.SimpleHttpServer.printJson;
+import static ru.larina.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserClearServlet extends HttpServlet {

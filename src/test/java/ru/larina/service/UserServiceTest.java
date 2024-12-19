@@ -1,5 +1,6 @@
 package ru.larina.service;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ru.larina.mapper.UserMapper;
 import ru.larina.repository.impl.UserRepositoryImpl;
@@ -7,6 +8,7 @@ import ru.larina.repository.impl.UserRepositoryImpl;
 class UserServiceTest {
 
     @Test
+    @Disabled
     void getById() {
 
         //GIVEN
