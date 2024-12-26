@@ -39,9 +39,6 @@ public class UserServlet extends HttpServlet {
         final UserRegistrationRequest userRegistrationRequest = objectMapper.readValue(jsonData, UserRegistrationRequest.class);
         final UserRegistrationResponse userRegistrationResponse = userService.create(userRegistrationRequest);
 
-//        objectMapper.writeValue(resp.getWriter(), userRegistrationResponse);
-//        resp.setStatus(HttpServletResponse.SC_OK);
-
         final String jsonString = objectMapper.writeValueAsString(userRegistrationResponse);
         printJson(resp, jsonString);
     }

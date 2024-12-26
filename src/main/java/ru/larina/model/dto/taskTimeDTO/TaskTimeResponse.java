@@ -1,15 +1,18 @@
 package ru.larina.model.dto.taskTimeDTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class TaskTimeResponse {
     private Long taskId;
     private Long taskTimeId;

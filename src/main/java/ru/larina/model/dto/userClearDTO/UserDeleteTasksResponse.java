@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserTaskTimeClearRequest {
+public class UserDeleteTasksResponse {
     private Long userId;
 }

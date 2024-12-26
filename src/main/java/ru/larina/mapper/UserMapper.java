@@ -2,6 +2,7 @@ package ru.larina.mapper;
 
 import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
+import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
 import ru.larina.model.dto.userClearDTO.UserTaskTimeClearResponse;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
@@ -44,18 +45,10 @@ public class UserMapper {
             .build();
     }
 
-    public UserTaskTimeClearResponse userToUserTaskTimeClearResponse(final User user) {
-        final List<TaskTimeId> timeIds = new ArrayList<>();
-        for (Task task : user.getTasks()) {
-            for (TaskTime taskTime : task.getTaskTimes()) {
-                timeIds.add(TaskTimeId.builder()
-                    .id(taskTime.getId())
-                    .build());
-            }
-        }
+    public UserTaskTimeClearResponse userToUserTaskTimeClearResponse(final User user, List<TaskTimeId> taskTimeIds) {
         return UserTaskTimeClearResponse.builder()
             .userId(user.getId())
-            .taskTimeIds(timeIds)
+            .taskTimeIds(taskTimeIds)
             .build();
     }
 
@@ -72,6 +65,12 @@ public class UserMapper {
         return UserTaskEffortResponse.builder()
             .userId(user.getId())
             .taskEfforts(taskTimeShortSpents)
+            .build();
+    }
+
+    public UserDeleteTasksResponse userToUserDeleteTasksResponse(final User user) {
+        return UserDeleteTasksResponse.builder()
+            .userId(user.getId())
             .build();
     }
 }

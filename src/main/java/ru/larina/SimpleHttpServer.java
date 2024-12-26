@@ -78,7 +78,7 @@ public class SimpleHttpServer {
         handler.addServlet(new ServletHolder(new UserTaskEffortsServlet(reportService, objectMapper)), "/api/v1/report/getUserTaskEfforts");
         handler.addServlet(new ServletHolder(new UserWorkIntervalsServlet(reportService, objectMapper)), "/api/v1/report/getUserWorkIntervalsByPeriod");
         handler.addServlet(new ServletHolder(new UserTotalWorkServlet(reportService, objectMapper)), "/api/v1/report/getUserTotalWorkByPeriod");
-        handler.addServlet(new ServletHolder(new UserClearServlet(taskService, objectMapper)), "/api/v1/user/clear");
+        handler.addServlet(new ServletHolder(new UserClearServlet(userService, objectMapper)), "/api/v1/user/clear");
 
         // Запускаем сервер
         server.start();

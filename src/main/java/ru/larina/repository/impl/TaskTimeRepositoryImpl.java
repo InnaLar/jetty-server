@@ -1,21 +1,20 @@
 package ru.larina.repository.impl;
 
 import jakarta.persistence.EntityManager;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.TypedQuery;
+import org.hibernate.query.Query;
 import ru.larina.hibernate.EmFactory;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
 import ru.larina.model.entity.TaskTime;
 import ru.larina.repository.TaskTimeRepository;
 
+import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
-public class TaskTimeRepositoryImpl implements TaskTimeRepository {
+public class TaskTimeRepositoryImpl extends SimpleCrudRepository<TaskTime, Long> implements TaskTimeRepository {
 
-    @Override
-    public Optional<TaskTime> findById(final Long id) {
-        try (EntityManager em = EmFactory.getEntityManager()) {
-            return Optional.ofNullable(em.find(TaskTime.class, id));
-        }
+    public TaskTimeRepositoryImpl() {
+        super(TaskTime.class);
     }
 
     @Override
@@ -42,17 +41,38 @@ public class TaskTimeRepositoryImpl implements TaskTimeRepository {
     }
 
     @Override
-    public TaskTime save(TaskTime taskTime) {
+    public void clearByUser(Long userId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            if (taskTime.getId() == null) {
-                em.persist(taskTime);
-            } else {
-                taskTime = em.merge(taskTime);
-            }
+            final Query query = (Query) em.createQuery(
+                """
+                    update TaskTime tt
+                    set tt.disabled = true
+                    where tt.task = any (from Task t where t.user.id = :userId)
+                    """);
+            query.setParameter("userId", userId);
+            query.executeUpdate();
             em.getTransaction().commit();
-            return taskTime;
         }
+    }
 
+    @Override
+    public List<TaskTimeId> getTaskTimesByUser(Long userId) {
+        try (EntityManager em = EmFactory.getEntityManager()) {
+            em.getTransaction().begin();
+            TypedQuery<TaskTimeId> q = em.createQuery(
+                """
+                    SELECT new TaskTimeId(tt.id)
+                    FROM User u
+                    JOIN u.tasks t
+                    JOIN t.taskTimes tt
+                    WHERE user.id =:userId
+                          AND disabled = true""",
+                TaskTimeId.class)
+                .setParameter("userId", userId);
+            List<TaskTimeId> taskTimeIds = q.getResultList();
+            em.getTransaction().commit();
+            return taskTimeIds;
+        }
     }
 }

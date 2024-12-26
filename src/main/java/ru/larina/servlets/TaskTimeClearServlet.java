@@ -20,7 +20,7 @@ public class TaskTimeClearServlet extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final Long userId = Long.valueOf(req.getParameter("userId"));
-        final UserTaskTimeClearResponse response = taskTimeService.clear(userId);
+        final UserTaskTimeClearResponse response = taskTimeService.clearByUser(userId);
         final String jsonString = objectMapper.writeValueAsString(response);
         printJson(resp, jsonString);
     }

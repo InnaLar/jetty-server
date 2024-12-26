@@ -2,44 +2,42 @@ package ru.larina.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.entity.Task;
-import ru.larina.model.entity.TaskTime;
 import ru.larina.model.entity.User;
 import ru.larina.repository.UserRepository;
 
-import java.util.Optional;
+public class UserRepositoryImpl extends SimpleCrudRepository<User, Long> implements UserRepository {
 
-public class UserRepositoryImpl implements UserRepository {
-    @Override
-    public Optional<User> findById(final Long id) {
-        try (EntityManager em = EmFactory.getEntityManager()) {
-            return Optional.ofNullable(em.find(User.class, id));
-        }
+    public UserRepositoryImpl() {
+        super(User.class);
     }
 
     @Override
-    public User save(User user) {
-        try (EntityManager em = EmFactory.getEntityManager()) {
+    public void deleteTasksByUser(Long userId) {
+        /*try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            if (user.getId() == null) {
-                em.persist(user);
-            } else {
-                user = em.merge(user);
-            }
+            final Query query = (Query) em.createQuery(
+                """
+                    update User u
+                    set u.tasks = null
+                    where u.id = :userId)
+                    """);
+            query.setParameter("userId", userId);
+            query.executeUpdate();
             em.getTransaction().commit();
-            return user;
-        }
-    }
-
-    @Override
-    public void clearTaskTimes(final User user) {
+        }*/
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            em.find(User.class, user.getId());
-            for (Task task : user.getTasks()) {
-                for (TaskTime taskTime : task.getTaskTimes()) {
-                    task.removeTaskTime(taskTime);
-                }
+            User user = em.createQuery("""
+                    select u
+                    from User u
+                    join fetch u.tasks t
+                    where u.id = :userId
+                    """, User.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+            int countTasks = user.getTasks().size();
+            for (int i = 0; i < countTasks; i++) {
+                user.remove(user.getTasks().getFirst());
             }
             em.getTransaction().commit();
         }

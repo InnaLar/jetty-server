@@ -7,6 +7,7 @@ import ru.larina.exception.ServiceException;
 import ru.larina.hibernate.EmFactory;
 import ru.larina.mapper.TaskTimeMapper;
 import ru.larina.mapper.UserMapper;
+import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
 import ru.larina.model.dto.taskTimeDTO.TaskTimeResponse;
 import ru.larina.model.dto.userClearDTO.UserTaskTimeClearResponse;
 import ru.larina.model.entity.Task;
@@ -17,6 +18,7 @@ import ru.larina.repository.TaskTimeRepository;
 import ru.larina.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 public class TaskTimesService {
@@ -51,18 +53,13 @@ public class TaskTimesService {
         }
     }
 
-    public UserTaskTimeClearResponse clear(final Long userId) {
+    public UserTaskTimeClearResponse clearByUser(final Long userId) {
+        taskTimeRepository.clearByUser(userId);
         try (EntityManager em = EmFactory.getEntityManager()) {
-            final User user = userRepository.findById(userId)
+            User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
-            /*em.getTransaction().begin();
-            em.merge(user);*/
-            for (Task task : user.getTasks()) {
-                for (TaskTime taskTime : task.getTaskTimes()) {
-                    taskTimeRepository.clear(taskTime);
-                }
-            }
-            return userMapper.userToUserTaskTimeClearResponse(user);
+            List<TaskTimeId> taskTimeIds = taskTimeRepository.getTaskTimesByUser(userId);
+            return userMapper.userToUserTaskTimeClearResponse(user, taskTimeIds);
         }
     }
 }
