@@ -5,6 +5,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.larina.hibernate.EmFactory;
+import ru.larina.model.dto.taskDTO.TaskCreationRequest;
+import ru.larina.model.dto.taskDTO.TaskCreationResponse;
 import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
@@ -97,7 +99,7 @@ class UserServletTest extends IntegrationTestBase {
     void deleteUserTasksShouldSuccess() {
         //GIVEN
         UserRegistrationRequest request = UserRegistrationRequest.builder()
-            .email("test2@mail.ru")
+            .email("test3@mail.ru")
             .build();
 
         UserRegistrationResponse response = webClient.post()
@@ -108,20 +110,23 @@ class UserServletTest extends IntegrationTestBase {
             .bodyToMono(UserRegistrationResponse.class)
             .block();
 
+        Assertions.assertThat(response).isNotNull();
+
+        TaskCreationRequest requestTask = TaskCreationRequest.builder()
+            .userId(response.getId())
+            .name("task1")
+            .build();
+
         //WHEN
         UserDeleteTasksResponse responseDeleteUserTasks = webClient.post()
-            .uri(uriBuilder -> {
-                assert response != null;
-                return uriBuilder.path("api/v1/user/clear")
-                    .queryParam("userId", response.getId())
-                    .build();
-            })
+            .uri(uriBuilder -> uriBuilder.path("api/v1/user/clear")
+                .queryParam("userId", response.getId())
+                .build())
             .retrieve()
             .bodyToMono(UserDeleteTasksResponse.class)
             .block();
         //THEN
         Assertions.assertThat(responseDeleteUserTasks).isNotNull();
-        assert response != null;
         Assertions.assertThat(responseDeleteUserTasks.getUserId()).isEqualTo(response.getId());
 
         try (EntityManager em = EmFactory.getEntityManager()) {

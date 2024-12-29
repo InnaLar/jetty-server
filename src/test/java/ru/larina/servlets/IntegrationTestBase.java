@@ -39,7 +39,7 @@ public class IntegrationTestBase {
     void tearDown() {
         try (EntityManager entityManager = EmFactory.getEntityManager()) {
             entityManager.getTransaction().begin();
-            entityManager.createNativeQuery("TRUNCATE TABLE users, tasks CASCADE")
+            entityManager.createNativeQuery("TRUNCATE TABLE users, tasks, task_time CASCADE")
                 .executeUpdate();
             entityManager.getTransaction().commit();
         }
