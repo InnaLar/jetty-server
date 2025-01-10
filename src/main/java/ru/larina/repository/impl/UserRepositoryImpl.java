@@ -1,6 +1,7 @@
 package ru.larina.repository.impl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.extern.slf4j.Slf4j;
 import ru.larina.hibernate.EmFactory;
 import ru.larina.model.entity.User;
@@ -14,12 +15,12 @@ public class UserRepositoryImpl extends SimpleCrudRepository<User, Long> impleme
     }
 
     @Override
-    public void deleteTasksByUser(Long userId) {
+    public void deleteTasksByUser(final Long userId) {
 
-        EntityManager em = EmFactory.getEntityManager();
+        final EntityManager em = EmFactory.getEntityManager();
         try {
             em.getTransaction().begin();
-            User user = em.createQuery("""
+            final User user = em.createQuery("""
                     select u
                     from User u
                     join fetch u.tasks t
@@ -27,12 +28,12 @@ public class UserRepositoryImpl extends SimpleCrudRepository<User, Long> impleme
                     """, User.class)
                 .setParameter("userId", userId)
                 .getSingleResult();
-            int countTasks = user.getTasks().size();
+            final int countTasks = user.getTasks().size();
             for (int i = 0; i < countTasks; i++) {
                 user.remove(user.getTasks().getFirst());
-                em.getTransaction().commit();
             }
-        } catch (RuntimeException e) {
+            em.getTransaction().commit();
+        } catch (NoResultException e) {
             log.info(e.getMessage());
             em.getTransaction().rollback();
         } finally {

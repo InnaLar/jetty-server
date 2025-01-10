@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.larina.hibernate.EmFactory;
 import ru.larina.model.dto.taskDTO.TaskCreationRequest;
-import ru.larina.model.dto.taskDTO.TaskCreationResponse;
 import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
@@ -14,17 +13,18 @@ import ru.larina.model.dto.userDTO.UserRegistrationRequest;
 import ru.larina.model.dto.userDTO.UserRegistrationResponse;
 import ru.larina.model.entity.User;
 
+@SuppressWarnings("UnusedLocalVariable")
 class UserServletTest extends IntegrationTestBase {
 
     @Test
     void addUserShouldSuccess() {
         //GIVEN
-        UserRegistrationRequest request = UserRegistrationRequest.builder()
+        final UserRegistrationRequest request = UserRegistrationRequest.builder()
             .email("test@mail.ru")
             .build();
 
         //WHEN
-        UserRegistrationResponse response = webClient.post()
+        final UserRegistrationResponse response = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
@@ -39,7 +39,7 @@ class UserServletTest extends IntegrationTestBase {
 
         try (EntityManager entityManager = EmFactory.getEntityManager()) {
             entityManager.getTransaction().begin();
-            User user = entityManager.find(User.class, response.getId());
+            final User user = entityManager.find(User.class, response.getId());
             Assertions.assertThat(user).isNotNull();
             Assertions.assertThat(user.getId())
                 .isEqualTo(response.getId());
@@ -51,11 +51,11 @@ class UserServletTest extends IntegrationTestBase {
     @Test
     void updateUserShouldSuccess() throws InterruptedException {
         //GIVEN
-        UserRegistrationRequest request = UserRegistrationRequest.builder()
+        final UserRegistrationRequest request = UserRegistrationRequest.builder()
             .email("test12234@mail.ru")
             .build();
 
-        UserRegistrationResponse response = webClient.post()
+        final UserRegistrationResponse response = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
@@ -63,15 +63,14 @@ class UserServletTest extends IntegrationTestBase {
             .bodyToMono(UserRegistrationResponse.class)
             .block();
 
-
         assert response != null;
-        UserPutRequest requestForUpdate = UserPutRequest.builder()
+        final UserPutRequest requestForUpdate = UserPutRequest.builder()
             .id(response.getId())
             .email("InnaLarrgj@mail.ru")
             .build();
 
         //WHEN
-        UserPutResponse responseUpdated = webClient.put()
+        final UserPutResponse responseUpdated = webClient.put()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestForUpdate)
@@ -86,7 +85,7 @@ class UserServletTest extends IntegrationTestBase {
 
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            User user = em.find(User.class, requestForUpdate.getId());
+            final User user = em.find(User.class, requestForUpdate.getId());
             Assertions.assertThat(user).isNotNull();
             Assertions.assertThat(user.getId()).isEqualTo(requestForUpdate.getId());
             Assertions.assertThat(user.getEmail()).isEqualTo(requestForUpdate.getEmail());
@@ -98,11 +97,11 @@ class UserServletTest extends IntegrationTestBase {
     @Test
     void deleteUserTasksShouldSuccess() {
         //GIVEN
-        UserRegistrationRequest request = UserRegistrationRequest.builder()
+        final UserRegistrationRequest request = UserRegistrationRequest.builder()
             .email("test3@mail.ru")
             .build();
 
-        UserRegistrationResponse response = webClient.post()
+        final UserRegistrationResponse response = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
@@ -112,13 +111,13 @@ class UserServletTest extends IntegrationTestBase {
 
         Assertions.assertThat(response).isNotNull();
 
-        TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
             .userId(response.getId())
             .name("task1")
             .build();
 
         //WHEN
-        UserDeleteTasksResponse responseDeleteUserTasks = webClient.post()
+        final UserDeleteTasksResponse responseDeleteUserTasks = webClient.post()
             .uri(uriBuilder -> uriBuilder.path("api/v1/user/clear")
                 .queryParam("userId", response.getId())
                 .build())
@@ -131,7 +130,7 @@ class UserServletTest extends IntegrationTestBase {
 
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            User user = em.find(User.class, response.getId());
+            final User user = em.find(User.class, response.getId());
             Assertions.assertThat(user).isNotNull();
             Assertions.assertThat(user.getTasks()).isEmpty();
             em.getTransaction().commit();

@@ -56,9 +56,9 @@ public class TaskTimesService {
     public UserTaskTimeClearResponse clearByUser(final Long userId) {
         taskTimeRepository.clearByUser(userId);
         try (EntityManager em = EmFactory.getEntityManager()) {
-            User user = userRepository.findById(userId)
+            final User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
-            List<TaskTimeId> taskTimeIds = taskTimeRepository.getTaskTimesByUser(userId);
+            final List<TaskTimeId> taskTimeIds = taskTimeRepository.getTaskTimesByUser(userId);
             return userMapper.userToUserTaskTimeClearResponse(user, taskTimeIds);
         }
     }

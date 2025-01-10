@@ -8,9 +8,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.larina.SimpleHttpServer;
 import ru.larina.hibernate.EmFactory;
+import ru.larina.service.MyPostgresSQLContainer;
 
 @Slf4j
-public class IntegrationTestBase {
+public class IntegrationTestBase extends MyPostgresSQLContainer {
+    private static boolean needStartServer = true;
     protected final WebClient webClient = createWebClient();
 
     private static WebClient createWebClient() {
@@ -22,17 +24,21 @@ public class IntegrationTestBase {
     @SneakyThrows
     @BeforeAll
     static void setUp() {
-        Runnable runnable = () -> {
+        final Runnable runnable = () -> {
+
             try {
                 SimpleHttpServer.main(new String[]{});
             } catch (Exception e) {
                 throw new RuntimeException(e);
+
             }
         };
+        if (needStartServer) {
+            new Thread(runnable).start();
 
-        new Thread(runnable).start();
-
-        Thread.sleep(2000);
+            Thread.sleep(2000);
+            needStartServer = false;
+        }
     }
 
     @AfterEach

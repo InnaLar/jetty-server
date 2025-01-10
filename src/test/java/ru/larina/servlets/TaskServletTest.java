@@ -16,11 +16,11 @@ public class TaskServletTest extends IntegrationTestBase {
     @Test
     void addTaskShouldSuccess() {
         //GIVEN
-        UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
             .email("test@mail.ru")
             .build();
 
-        UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationResponse responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
@@ -29,13 +29,13 @@ public class TaskServletTest extends IntegrationTestBase {
             .block();
 
         assert responseUser != null;
-        TaskCreationRequest request = TaskCreationRequest.builder()
+        final TaskCreationRequest request = TaskCreationRequest.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
         //WHEN
-        TaskCreationResponse response = webClient.post()
+        final TaskCreationResponse response = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
@@ -49,7 +49,7 @@ public class TaskServletTest extends IntegrationTestBase {
 
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            Task task = em.find(Task.class, response.getId());
+            final Task task = em.find(Task.class, response.getId());
             Assertions.assertThat(task).isNotNull();
             Assertions.assertThat(response.getId()).isEqualTo(task.getId());
             Assertions.assertThat(response.getNameTask()).isEqualTo(task.getName());

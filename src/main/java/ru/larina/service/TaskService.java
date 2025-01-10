@@ -21,8 +21,8 @@ public class TaskService {
     private final UserRepository userRepository;
     private final TaskMapper taskMapper;
 
-    public TaskCreationResponse save(TaskCreationRequest request) {
-        User user = userRepository.findById(request.getUserId())
+    public TaskCreationResponse save(final TaskCreationRequest request) {
+        final User user = userRepository.findById(request.getUserId())
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, request.getUserId()));
         final Task task = taskMapper.taskCreationRequestToTask(request, user);
         final Task taskAdded = taskRepository.save(task);

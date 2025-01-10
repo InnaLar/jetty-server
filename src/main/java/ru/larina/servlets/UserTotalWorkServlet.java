@@ -16,8 +16,8 @@ import static ru.larina.SimpleHttpServer.printJson;
 
 @AllArgsConstructor
 public class UserTotalWorkServlet extends HttpServlet {
-    final private ReportService reportService;
-    final private ObjectMapper objectMapper;
+    private final ReportService reportService;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {

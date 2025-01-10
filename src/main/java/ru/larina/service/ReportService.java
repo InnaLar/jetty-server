@@ -19,11 +19,11 @@ import java.util.List;
 
 @AllArgsConstructor
 public class ReportService {
-    final private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     public UserTaskEffortResponse getUserTaskEffortByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         final List<TaskTimeShortSpentProjection> taskTimeShortSpentProjections = taskRepository.getUserTaskEffortsByPeriods(userId, startTime, stopTime);
-        List<TaskTimeShortSpent> taskTimeShortSpents = taskTimeShortSpentProjections.stream()
+        final List<TaskTimeShortSpent> taskTimeShortSpents = taskTimeShortSpentProjections.stream()
             .map(new ReportMapper()::taskTimeShortSpentProjectionToTaskTimeShortSpent)
             .toList();
         return UserTaskEffortResponse.builder()
@@ -34,7 +34,7 @@ public class ReportService {
 
     public UserWorkIntervalsResponse getUserWorkIntervalByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         final List<TaskTimeLongSpentProjection> projections = taskRepository.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
-        List<TaskTimeLongSpent> taskTimeLongSpents = projections.stream()
+        final List<TaskTimeLongSpent> taskTimeLongSpents = projections.stream()
             .map(new ReportMapper()::taskTimeLongSpentProjectionToTaskTimeLongSpent)
             .toList();
         return UserWorkIntervalsResponse.builder()
@@ -45,7 +45,7 @@ public class ReportService {
 
     public UserTotalWorkByPeriodResponse getUserTotalWorkByPeriod(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         final TotalWorkByPeriodProjection timeSpent = taskRepository.getUserTotalWorkByPeriods(userId, startTime, stopTime);
-        BigDecimal totalTime = timeSpent.getTotalTime();
+        final BigDecimal totalTime = timeSpent.getTotalTime();
         Duration duration = null;
         if (totalTime != null) {
             duration = SecondToDuration.getDurationfromSeconds(totalTime.longValue());

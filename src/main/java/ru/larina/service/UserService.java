@@ -5,7 +5,6 @@ import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
 import ru.larina.mapper.UserMapper;
 import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
-import ru.larina.model.dto.userClearDTO.UserTaskTimeClearResponse;
 import ru.larina.model.dto.userDTO.UserPutRequest;
 import ru.larina.model.dto.userDTO.UserPutResponse;
 import ru.larina.model.dto.userDTO.UserRegistrationRequest;
@@ -38,7 +37,7 @@ public class UserService {
 
     public UserDeleteTasksResponse deleteTasksByUser(final Long id) {
         userRepository.deleteTasksByUser(id);
-        User user = User.builder()
+        final User user = User.builder()
             .id(id)
             .build();
         return userMapper.userToUserDeleteTasksResponse(user);

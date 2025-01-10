@@ -1,13 +1,11 @@
 package ru.larina.repository;
 
 import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
-import ru.larina.model.entity.BaseEntity;
 import ru.larina.model.entity.Task;
 import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;
 import ru.larina.model.projections.TotalWorkByPeriodProjection;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 

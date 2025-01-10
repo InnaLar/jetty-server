@@ -19,11 +19,11 @@ public class TaskTimeServletTest extends IntegrationTestBase {
     @Test
     void startTaskTimeByTaskShouldAccess() {
         //GIVEN
-        UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
             .email("test@mail.ru")
             .build();
 
-        UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationResponse responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
@@ -32,12 +32,12 @@ public class TaskTimeServletTest extends IntegrationTestBase {
             .block();
 
         assert responseUser != null;
-        TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
-        TaskCreationResponse responseTask = webClient.post()
+        final TaskCreationResponse responseTask = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestTask)
@@ -46,7 +46,7 @@ public class TaskTimeServletTest extends IntegrationTestBase {
             .block();
 
         //WHEN
-        TaskTimeResponse response = webClient.post()
+        final TaskTimeResponse response = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/start")
                 .queryParam("taskId", responseTask.getId())
@@ -62,11 +62,11 @@ public class TaskTimeServletTest extends IntegrationTestBase {
 
     @Test
     void stopTaskTimeShouldSuccess() {
-        UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
             .email("test@mail.ru")
             .build();
 
-        UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationResponse responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
@@ -75,12 +75,12 @@ public class TaskTimeServletTest extends IntegrationTestBase {
             .block();
 
         assert responseUser != null;
-        TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
-        TaskCreationResponse responseTask = webClient.post()
+        final TaskCreationResponse responseTask = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestTask)
@@ -88,7 +88,7 @@ public class TaskTimeServletTest extends IntegrationTestBase {
             .bodyToMono(TaskCreationResponse.class)
             .block();
         Assertions.assertThat(responseTask).isNotNull();
-        TaskTimeResponse responseTaskTime = webClient.post()
+        final TaskTimeResponse responseTaskTime = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/start")
                 .queryParam("taskId", responseTask.getId())
@@ -98,7 +98,7 @@ public class TaskTimeServletTest extends IntegrationTestBase {
             .block();
         Assertions.assertThat(responseTaskTime).isNotNull();
         //WHEN
-        TaskTimeResponse response = webClient.post()
+        final TaskTimeResponse response = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/stop")
                 .queryParam("taskId", responseTask.getId())
@@ -118,11 +118,11 @@ public class TaskTimeServletTest extends IntegrationTestBase {
     @Test
     void clearTaskTimesByUser() {
         //GIVEN
-        UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
             .email("test@mail.ru")
             .build();
 
-        UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationResponse responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
@@ -132,12 +132,12 @@ public class TaskTimeServletTest extends IntegrationTestBase {
 
         assert responseUser != null;
 
-        TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
-        TaskCreationResponse responseTask = webClient.post()
+        final TaskCreationResponse responseTask = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestTask)
@@ -147,7 +147,7 @@ public class TaskTimeServletTest extends IntegrationTestBase {
 
         Assertions.assertThat(responseTask).isNotNull();
 
-        TaskTimeResponse responseTaskTimeStart = webClient.post()
+        final TaskTimeResponse responseTaskTimeStart = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/start")
                 .queryParam("taskId", responseTask.getId())
@@ -167,7 +167,7 @@ public class TaskTimeServletTest extends IntegrationTestBase {
             .block();
 
         //WHEN
-        UserTaskTimeClearResponse response = webClient
+        final UserTaskTimeClearResponse response = webClient
             .post()
             .uri(uriBuilder -> uriBuilder.path("api/v1/task-time/clear").queryParam("userId", responseUser.getId()).build())
             .retrieve()
@@ -178,10 +178,10 @@ public class TaskTimeServletTest extends IntegrationTestBase {
         Assertions.assertThat(response).isNotNull();
         Assertions.assertThat(response.getTaskTimeIds().getFirst()).isNotNull();
 
-        List<TaskTimeId> TaskTimeIdByUser;
+        final List<TaskTimeId> taskTimeIdByUser;
 
         try (EntityManager em = EmFactory.getEntityManager()) {
-            TaskTimeIdByUser = em.createQuery(
+            taskTimeIdByUser = em.createQuery(
                     """
                             select tt.id
                             from TaskTime tt
@@ -192,7 +192,7 @@ public class TaskTimeServletTest extends IntegrationTestBase {
                 .setParameter("userId", responseUser.getId())
                 .getResultList();
         }
-        Assertions.assertThat(TaskTimeIdByUser.size()).isEqualTo(1);
-        Assertions.assertThat(TaskTimeIdByUser.getFirst().getId()).isEqualTo(responseTaskTimeStart.getTaskTimeId());
+        Assertions.assertThat(taskTimeIdByUser.size()).isEqualTo(1);
+        Assertions.assertThat(taskTimeIdByUser.getFirst().getId()).isEqualTo(responseTaskTimeStart.getTaskTimeId());
     }
 }

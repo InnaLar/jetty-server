@@ -41,7 +41,7 @@ public class TaskTimeRepositoryImpl extends SimpleCrudRepository<TaskTime, Long>
     }
 
     @Override
-    public void clearByUser(Long userId) {
+    public void clearByUser(final Long userId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
             final Query query = (Query) em.createQuery(
@@ -57,10 +57,10 @@ public class TaskTimeRepositoryImpl extends SimpleCrudRepository<TaskTime, Long>
     }
 
     @Override
-    public List<TaskTimeId> getTaskTimesByUser(Long userId) {
+    public List<TaskTimeId> getTaskTimesByUser(final Long userId) {
         try (EntityManager em = EmFactory.getEntityManager()) {
             em.getTransaction().begin();
-            TypedQuery<TaskTimeId> q = em.createQuery(
+            final TypedQuery<TaskTimeId> q = em.createQuery(
                 """
                     SELECT new TaskTimeId(tt.id)
                     FROM User u
@@ -70,7 +70,7 @@ public class TaskTimeRepositoryImpl extends SimpleCrudRepository<TaskTime, Long>
                           AND disabled = true""",
                 TaskTimeId.class)
                 .setParameter("userId", userId);
-            List<TaskTimeId> taskTimeIds = q.getResultList();
+            final List<TaskTimeId> taskTimeIds = q.getResultList();
             em.getTransaction().commit();
             return taskTimeIds;
         }

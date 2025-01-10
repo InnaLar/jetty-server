@@ -13,7 +13,7 @@ import ru.larina.repository.TaskRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class TaskRepositoryImpl extends SimpleCrudRepository<Task, Long> implements TaskRepository  {
+public class TaskRepositoryImpl extends SimpleCrudRepository<Task, Long> implements TaskRepository {
     public TaskRepositoryImpl() {
         super(Task.class);
     }
@@ -43,7 +43,7 @@ public class TaskRepositoryImpl extends SimpleCrudRepository<Task, Long> impleme
     @Override
     public List<TaskTimeLongSpentProjection> getUserWorkIntervalByPeriods(final Long userId, final LocalDateTime startTime, final LocalDateTime stopTime) {
         try (EntityManager em = EmFactory.getEntityManager()) {
-            List<TaskTimeLongSpentProjection> taskTimeLongSpentProjections = em.createQuery(
+            final List<TaskTimeLongSpentProjection> taskTimeLongSpentProjections = em.createQuery(
                     """
                             select new TaskTimeLongSpentProjection(tt.task.id as id,
                              to_char(tt.startTime, 'DD-MM-YYYY HH24:MI') as startDateTime,

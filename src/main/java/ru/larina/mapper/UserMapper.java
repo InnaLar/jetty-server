@@ -45,7 +45,7 @@ public class UserMapper {
             .build();
     }
 
-    public UserTaskTimeClearResponse userToUserTaskTimeClearResponse(final User user, List<TaskTimeId> taskTimeIds) {
+    public UserTaskTimeClearResponse userToUserTaskTimeClearResponse(final User user, final List<TaskTimeId> taskTimeIds) {
         return UserTaskTimeClearResponse.builder()
             .userId(user.getId())
             .taskTimeIds(taskTimeIds)

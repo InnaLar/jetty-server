@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ReportMapper {
-    public TaskTimeShortSpent taskTimeShortSpentProjectionToTaskTimeShortSpent(TaskTimeShortSpentProjection projection) {
+    public TaskTimeShortSpent taskTimeShortSpentProjectionToTaskTimeShortSpent(final TaskTimeShortSpentProjection projection) {
         return TaskTimeShortSpent.builder()
             .taskId(projection.getId())
             .timeSpent(SecondToDuration.getDurationfromSeconds(projection.getSumTime().longValue()))
             .build();
     }
 
-    public TaskTimeLongSpent taskTimeLongSpentProjectionToTaskTimeLongSpent(TaskTimeLongSpentProjection taskTimeLongSpentProjection) {
+    public TaskTimeLongSpent taskTimeLongSpentProjectionToTaskTimeLongSpent(final TaskTimeLongSpentProjection taskTimeLongSpentProjection) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         return TaskTimeLongSpent.builder()
             .id(taskTimeLongSpentProjection.getId())

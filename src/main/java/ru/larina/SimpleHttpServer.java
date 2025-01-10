@@ -32,7 +32,7 @@ import ru.larina.servlets.UserWorkIntervalsServlet;
 
 import java.io.IOException;
 
-@SuppressWarnings("UncommentedMain")
+@SuppressWarnings({"UncommentedMain", "ClassDataAbstractionCoupling", "ClassFanOutComplexity"})
 public class SimpleHttpServer {
 
     public static void printJson(final HttpServletResponse resp, final String jsonString) throws IOException {
