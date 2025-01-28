@@ -8,9 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EmFactory {
-    private static EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory(
-        "myPersistenceUnit"
-    );
+    private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
+
+    static {
+        ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory(
+            "myPersistenceUnit"
+        );
+
+    }
 
     public static EntityManager getEntityManager() {
         return ENTITY_MANAGER_FACTORY.createEntityManager();

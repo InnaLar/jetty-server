@@ -10,7 +10,7 @@
         <!-- Настройки соединения с базой данных -->
         <properties>
             <!-- JDBC URL для PostgreSQL -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?prepareThreshold=0"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.password" value="postgres"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
@@ -20,6 +20,16 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- options: validate | update | create | create-drop -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.connection.autocommit" value="false"/>
+            <!--property name="hibernate.connection.pool_size" value="50"/-->
+            <!-- Hikari настройки -->
+            <property name="hibernate.hikari.minimumIdle" value="2"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="40"/>
+            <property name="hibernate.hikari.idleTimeout" value="30000"/>
+            <property name="hibernate.hikari.connectionTimeout" value ="20000"/>
+            <property name="hibernate.hikari.poolName" value="MyHibernateHikariPool"/>
+            <property name="hibernate.hikari.maxLifetime" value="1800000"/>
+
         </properties>
     </persistence-unit>
 </persistence>
