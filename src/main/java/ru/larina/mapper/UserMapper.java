@@ -1,14 +1,15 @@
 package ru.larina.mapper;
 
-import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
-import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
-import ru.larina.model.dto.userClearDTO.UserTaskTimeClearResponse;
-import ru.larina.model.dto.userDTO.UserPutRequest;
-import ru.larina.model.dto.userDTO.UserPutResponse;
-import ru.larina.model.dto.userDTO.UserRegistrationRequest;
-import ru.larina.model.dto.userDTO.UserRegistrationResponse;
-import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
+import org.springframework.stereotype.Component;
+import ru.larina.model.dto.taskTime.TaskTimeId;
+import ru.larina.model.dto.taskTime.TaskTimeShortSpent;
+import ru.larina.model.dto.userClear.UserDeleteTasksResponse;
+import ru.larina.model.dto.userClear.UserTaskTimeClearResponse;
+import ru.larina.model.dto.user.UserPutRequest;
+import ru.larina.model.dto.user.UserPutResponse;
+import ru.larina.model.dto.user.UserRegistrationRequest;
+import ru.larina.model.dto.user.UserRegistrationResponse;
+import ru.larina.model.dto.userReport.UserTaskEffortResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.TaskTime;
 import ru.larina.model.entity.User;
@@ -17,6 +18,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserMapper {
     public User userRegistrationRequestToUser(final UserRegistrationRequest rq) {
         return User.builder()

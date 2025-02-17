@@ -1,4 +1,4 @@
-package ru.larina.model.dto.taskTimeDTO;
+package ru.larina.model.dto.userReport;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.Duration;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskTimeShortSpent {
-    private Long taskId;
-    private Duration timeSpent;
+public class UserTotalWorkByPeriodResponse {
+    private Long userId;
+    private Duration totalWork;
 }

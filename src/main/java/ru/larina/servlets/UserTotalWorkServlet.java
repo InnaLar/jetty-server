@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.userReportDTO.UserTotalWorkByPeriodResponse;
+import ru.larina.model.dto.userReport.UserTotalWorkByPeriodResponse;
 import ru.larina.service.ReportService;
 
 import java.io.IOException;

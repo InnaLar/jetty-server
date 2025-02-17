@@ -2,11 +2,11 @@ package ru.larina.service;
 
 import lombok.AllArgsConstructor;
 import ru.larina.mapper.ReportMapper;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
-import ru.larina.model.dto.userReportDTO.UserTaskEffortResponse;
-import ru.larina.model.dto.userReportDTO.UserTotalWorkByPeriodResponse;
-import ru.larina.model.dto.userReportDTO.UserWorkIntervalsResponse;
+import ru.larina.model.dto.taskTime.TaskTimeLongSpent;
+import ru.larina.model.dto.taskTime.TaskTimeShortSpent;
+import ru.larina.model.dto.userReport.UserTaskEffortResponse;
+import ru.larina.model.dto.userReport.UserTotalWorkByPeriodResponse;
+import ru.larina.model.dto.userReport.UserWorkIntervalsResponse;
 import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;
 import ru.larina.model.projections.TotalWorkByPeriodProjection;

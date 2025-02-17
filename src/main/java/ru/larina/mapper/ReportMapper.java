@@ -1,7 +1,7 @@
 package ru.larina.mapper;
 
-import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
+import ru.larina.model.dto.taskTime.TaskTimeLongSpent;
+import ru.larina.model.dto.taskTime.TaskTimeShortSpent;
 import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;
 import ru.larina.service.SecondToDuration;

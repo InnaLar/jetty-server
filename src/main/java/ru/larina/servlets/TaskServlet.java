@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.taskDTO.TaskCreationRequest;
-import ru.larina.model.dto.taskDTO.TaskCreationResponse;
+import ru.larina.model.dto.task.TaskCreationRequest;
+import ru.larina.model.dto.task.TaskCreationResponse;
 import ru.larina.service.TaskService;
 
 import java.io.IOException;

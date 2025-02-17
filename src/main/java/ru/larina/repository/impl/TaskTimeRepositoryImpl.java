@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.query.Query;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
+import ru.larina.model.dto.taskTime.TaskTimeId;
 import ru.larina.model.entity.TaskTime;
 import ru.larina.repository.TaskTimeRepository;
 

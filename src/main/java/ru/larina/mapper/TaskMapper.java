@@ -1,7 +1,7 @@
 package ru.larina.mapper;
 
-import ru.larina.model.dto.taskDTO.TaskCreationRequest;
-import ru.larina.model.dto.taskDTO.TaskCreationResponse;
+import ru.larina.model.dto.task.TaskCreationRequest;
+import ru.larina.model.dto.task.TaskCreationResponse;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.User;
 

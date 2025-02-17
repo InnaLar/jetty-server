@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.userDTO.UserPutRequest;
-import ru.larina.model.dto.userDTO.UserPutResponse;
-import ru.larina.model.dto.userDTO.UserRegistrationRequest;
-import ru.larina.model.dto.userDTO.UserRegistrationResponse;
+import ru.larina.model.dto.user.UserPutRequest;
+import ru.larina.model.dto.user.UserPutResponse;
+import ru.larina.model.dto.user.UserRegistrationRequest;
+import ru.larina.model.dto.user.UserRegistrationResponse;
 import ru.larina.service.UserService;
 
 import java.io.IOException;

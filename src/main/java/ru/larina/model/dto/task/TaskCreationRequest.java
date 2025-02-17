@@ -1,4 +1,4 @@
-package ru.larina.model.dto.userDTO;
+package ru.larina.model.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistrationRequest {
-    private String email;
+public class TaskCreationRequest {
+    private String name;
+    private Long userId;
 }

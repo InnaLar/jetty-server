@@ -1,10 +1,10 @@
-package ru.larina.model.dto.userReportDTO;
+package ru.larina.model.dto.userReport;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeLongSpent;
+import ru.larina.model.dto.taskTime.TaskTimeLongSpent;
 
 import java.util.List;
 

@@ -5,10 +5,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.dto.taskDTO.TaskCreationRequest;
-import ru.larina.model.dto.taskDTO.TaskCreationResponse;
-import ru.larina.model.dto.userDTO.UserRegistrationRequest;
-import ru.larina.model.dto.userDTO.UserRegistrationResponse;
+import ru.larina.model.dto.task.TaskCreationRequest;
+import ru.larina.model.dto.task.TaskCreationResponse;
+import ru.larina.model.dto.user.UserRegistrationRequest;
+import ru.larina.model.dto.user.UserRegistrationResponse;
 import ru.larina.model.entity.Task;
 
 public class TaskServletTest extends IntegrationTestBase {

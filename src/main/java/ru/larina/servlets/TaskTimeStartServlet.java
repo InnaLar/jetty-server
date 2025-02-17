@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import ru.larina.exception.ServiceException;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeResponse;
+import ru.larina.model.dto.taskTime.TaskTimeResponse;
 import ru.larina.service.TaskTimesService;
 
 import java.io.IOException;

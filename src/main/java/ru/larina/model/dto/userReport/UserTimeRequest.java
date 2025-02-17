@@ -1,4 +1,4 @@
-package ru.larina.model.dto.userReportDTO;
+package ru.larina.model.dto.userReport;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

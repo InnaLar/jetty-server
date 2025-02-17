@@ -1,6 +1,6 @@
 package ru.larina.mapper;
 
-import ru.larina.model.dto.taskTimeDTO.TaskTimeResponse;
+import ru.larina.model.dto.taskTime.TaskTimeResponse;
 import ru.larina.model.entity.TaskTime;
 
 public class TaskTimeMapper {

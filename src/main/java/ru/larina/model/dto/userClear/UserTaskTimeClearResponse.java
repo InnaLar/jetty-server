@@ -1,10 +1,10 @@
-package ru.larina.model.dto.userReportDTO;
+package ru.larina.model.dto.userClear;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeShortSpent;
+import ru.larina.model.dto.taskTime.TaskTimeId;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserTaskEffortResponse {
+public class UserTaskTimeClearResponse {
     private Long userId;
-    private List<TaskTimeShortSpent> taskEfforts;
+    private List<TaskTimeId> taskTimeIds;
 }

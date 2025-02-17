@@ -42,7 +42,7 @@ public class SimpleHttpServer {
         resp.getWriter().close();
     }
 
-    public static void main(final String[] args) throws Exception {
+  /*  public static void main(final String[] args) throws Exception {
 
         // Создаём сервер на порту 8080
         final Server server = new Server(8080);
@@ -86,5 +86,5 @@ public class SimpleHttpServer {
 
     }
     // Простой сервлет
-
+*/
 }

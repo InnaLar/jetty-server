@@ -1,6 +1,6 @@
 package ru.larina.repository;
 
-import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
+import ru.larina.model.dto.taskTime.TaskTimeId;
 import ru.larina.model.entity.TaskTime;
 
 import java.util.List;

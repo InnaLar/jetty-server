@@ -3,10 +3,12 @@ package ru.larina.hibernate;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+//@Component
 public class EmFactory {
     private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
 

@@ -1,5 +1,6 @@
-package ru.larina.model.dto.taskDTO;
+package ru.larina.model.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskCreationResponse {
-    private Long id;
-    private String nameTask;
-    private Long userId;
+public class UserRegistrationRequest {
+    @NotBlank
+    private String email;
 }

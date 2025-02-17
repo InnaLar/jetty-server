@@ -1,4 +1,4 @@
-package ru.larina.model.dto.taskTimeDTO;
+package ru.larina.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class TaskTimeId {
+@AllArgsConstructor
+public class UserPutRequest {
     private Long id;
+    private String email;
 }

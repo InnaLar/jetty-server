@@ -5,12 +5,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.dto.taskDTO.TaskCreationRequest;
-import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
-import ru.larina.model.dto.userDTO.UserPutRequest;
-import ru.larina.model.dto.userDTO.UserPutResponse;
-import ru.larina.model.dto.userDTO.UserRegistrationRequest;
-import ru.larina.model.dto.userDTO.UserRegistrationResponse;
+import ru.larina.model.dto.task.TaskCreationRequest;
+import ru.larina.model.dto.userClear.UserDeleteTasksResponse;
+import ru.larina.model.dto.user.UserPutRequest;
+import ru.larina.model.dto.user.UserPutResponse;
+import ru.larina.model.dto.user.UserRegistrationRequest;
+import ru.larina.model.dto.user.UserRegistrationResponse;
 import ru.larina.model.entity.User;
 
 @SuppressWarnings("UnusedLocalVariable")

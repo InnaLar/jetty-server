@@ -3,7 +3,7 @@ package ru.larina.repository.impl;
 import jakarta.persistence.EntityManager;
 import org.hibernate.query.Query;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.dto.taskTimeDTO.TaskTimeId;
+import ru.larina.model.dto.taskTime.TaskTimeId;
 import ru.larina.model.entity.Task;
 import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;

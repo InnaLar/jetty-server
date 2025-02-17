@@ -1,17 +1,19 @@
 package ru.larina.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
 import ru.larina.mapper.UserMapper;
-import ru.larina.model.dto.userClearDTO.UserDeleteTasksResponse;
-import ru.larina.model.dto.userDTO.UserPutRequest;
-import ru.larina.model.dto.userDTO.UserPutResponse;
-import ru.larina.model.dto.userDTO.UserRegistrationRequest;
-import ru.larina.model.dto.userDTO.UserRegistrationResponse;
+import ru.larina.model.dto.userClear.UserDeleteTasksResponse;
+import ru.larina.model.dto.user.UserPutRequest;
+import ru.larina.model.dto.user.UserPutResponse;
+import ru.larina.model.dto.user.UserRegistrationRequest;
+import ru.larina.model.dto.user.UserRegistrationResponse;
 import ru.larina.model.entity.User;
-import ru.larina.repository.UserRepository;
+import ru.larina.repository.jpa.UserRepository;
 
+@Service
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;

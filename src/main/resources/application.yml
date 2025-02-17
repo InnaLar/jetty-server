@@ -1,0 +1,31 @@
+server:
+  port: 8080 # порт, на котором будет запущен наш сервис
+  shutdown: graceful # для корректного завершения работы приложения
+
+logging:
+  level:
+    root: info
+    org.zalando.logbook: TRACE
+    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+
+spring:
+  application:
+    name: jetty-server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver # драйвер для работы с postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate # выключаем автоматическое создание таблиц хибернейтом, т.к. используем flyway
+      # оставляем валидацию таблиц
+    show-sql: true # показывать sql запросы в консоли
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect # диалект для работы с postgres
+        format_sql: true # форматировать sql запросы в консоли
+        default_schema: public
+    open-in-view: false

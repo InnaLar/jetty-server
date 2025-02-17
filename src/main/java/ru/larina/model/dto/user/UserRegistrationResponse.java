@@ -1,4 +1,4 @@
-package ru.larina.model.dto.userClearDTO;
+package ru.larina.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserTaskTimeClearRequest {
-    private Long userId;
+public class UserRegistrationResponse {
+    private Long id;
+    private String eml;
 }
