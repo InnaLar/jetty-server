@@ -6,6 +6,7 @@ import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
 import ru.larina.mapper.ReportMapper;
 import ru.larina.mapper.UserMapper;
+import ru.larina.model.dto.taskTime.TaskTimeLongSpent;
 import ru.larina.model.dto.taskTime.TaskTimeShortSpent;
 import ru.larina.model.dto.user.UserPutRq;
 import ru.larina.model.dto.user.UserPutRs;
@@ -14,10 +15,16 @@ import ru.larina.model.dto.user.UserRegistrationRs;
 import ru.larina.model.dto.userClear.UserDeleteTasksRs;
 import ru.larina.model.dto.userClear.UserTaskTimeClearRs;
 import ru.larina.model.dto.userReport.UserTaskEffortRs;
+import ru.larina.model.dto.userReport.UserTotalWorkByPeriodRs;
+import ru.larina.model.dto.userReport.UserWorkIntervalsRs;
 import ru.larina.model.entity.User;
+import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;
+import ru.larina.model.projections.TotalWorkByPeriodProjection;
 import ru.larina.repository.jpa.UserRepository;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +54,7 @@ public class UserService {
     }
 
     public UserDeleteTasksRs deleteTasksByUser(final Long id) {
-        userRepository.deleteTasksByUser(id);
+        userRepository.deleteTasksByUser(id, id);
         final User user = User.builder()
             .id(id)
             .build();
@@ -75,4 +82,28 @@ public class UserService {
             .build();
     }
 
+    public UserWorkIntervalsRs getUserWorkIntervalByPeriods(final Long userId,
+                                                            final LocalDateTime startTime,
+                                                            final LocalDateTime stopTime) {
+        final List<TaskTimeLongSpentProjection> projections = userRepository.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
+        final List<TaskTimeLongSpent> taskTimeLongSpents = projections.stream()
+            .map(reportMapper::taskTimeLongSpentProjectionToTaskTimeLongSpent)
+            .toList();
+        return UserWorkIntervalsRs.builder()
+            .userId(userId)
+            .workIntervals(taskTimeLongSpents)
+            .build();
+    }
+
+    public UserTotalWorkByPeriodRs getUserTotalWorkByPeriod(final Long userId,
+                                                            final LocalDateTime startTime,
+                                                            final LocalDateTime stopTime) {
+        final TotalWorkByPeriodProjection timeSpent = userRepository.getUserTotalWorkByPeriods(userId, startTime, stopTime);
+        final BigDecimal totalTime = timeSpent.getTotalTime();
+        Duration duration = Duration.ofNanos(totalTime.longValue());
+        return UserTotalWorkByPeriodRs.builder()
+            .userId(userId)
+            .totalWork(duration)
+            .build();
+    }
 }

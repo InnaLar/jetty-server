@@ -1,15 +1,16 @@
 package ru.larina.mapper;
 
+import org.springframework.stereotype.Component;
 import ru.larina.model.dto.taskTime.TaskTimeLongSpent;
 import ru.larina.model.dto.taskTime.TaskTimeShortSpent;
 import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;
-import ru.larina.service.SecondToDuration;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class ReportMapper {
     public TaskTimeShortSpent taskTimeShortSpentProjectionToTaskTimeShortSpent(final TaskTimeShortSpentProjection projection) {
         return TaskTimeShortSpent.builder()

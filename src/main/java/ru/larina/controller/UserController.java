@@ -14,13 +14,14 @@ import ru.larina.model.dto.user.UserPutRq;
 import ru.larina.model.dto.user.UserPutRs;
 import ru.larina.model.dto.user.UserRegistrationRq;
 import ru.larina.model.dto.user.UserRegistrationRs;
+import ru.larina.model.dto.userClear.UserDeleteTasksRs;
 import ru.larina.model.dto.userClear.UserTaskTimeClearRs;
 import ru.larina.model.dto.userReport.UserTaskEffortRs;
-import ru.larina.model.projections.TaskTimeShortSpentProjection;
+import ru.larina.model.dto.userReport.UserTotalWorkByPeriodRs;
+import ru.larina.model.dto.userReport.UserWorkIntervalsRs;
 import ru.larina.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,5 +57,24 @@ public class UserController {
                                                         final @RequestParam LocalDateTime startTime,
                                                         final @RequestParam LocalDateTime stopTime) {
         return userService.getUserTaskEffortsByPeriods(userId, startTime, stopTime);
+    }
+
+    @GetMapping("/api/v1/report/getUserWorkIntervalsByPeriod")
+    public UserWorkIntervalsRs getUserWorkIntervalByPeriods(final @RequestParam Long userId,
+                                                            final @RequestParam LocalDateTime startTime,
+                                                            final @RequestParam LocalDateTime stopTime) {
+        return userService.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
+    }
+
+    @GetMapping("/api/v1/report/getUserTotalWorkByPeriod")
+    public UserTotalWorkByPeriodRs getUserTotalWorkByPeriod(final @RequestParam Long userId,
+                                                            final @RequestParam LocalDateTime startTime,
+                                                            final @RequestParam LocalDateTime stopTime) {
+        return userService.getUserTotalWorkByPeriod(userId, startTime, stopTime);
+    }
+
+    @PostMapping("/api/v1/user/clear")
+    public UserDeleteTasksRs deleteTasksByUser(final @RequestParam Long userId) {
+        return userService.deleteTasksByUser(userId);
     }
 }
