@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.userClear.UserTaskTimeClearResponse;
+import ru.larina.model.dto.userClear.UserTaskTimeClearRs;
 import ru.larina.service.TaskTimesService;
 
 import java.io.IOException;
@@ -19,9 +19,9 @@ public class TaskTimeClearServlet extends HttpServlet {
 
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        final Long userId = Long.valueOf(req.getParameter("userId"));
-        final UserTaskTimeClearResponse response = taskTimeService.clearByUser(userId);
+        /*final Long userId = Long.valueOf(req.getParameter("userId"));
+        final UserTaskTimeClearRs response = taskTimeService.clearByUser(userId);
         final String jsonString = objectMapper.writeValueAsString(response);
-        printJson(resp, jsonString);
+        printJson(resp, jsonString);*/
     }
 }

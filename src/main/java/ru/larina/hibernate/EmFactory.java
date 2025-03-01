@@ -3,32 +3,30 @@ package ru.larina.hibernate;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-//@Component
 public class EmFactory {
-    private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
+    private static EntityManagerFactory entityManagerFactory;
 
     static {
-        ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory(
+        entityManagerFactory = Persistence.createEntityManagerFactory(
             "myPersistenceUnit"
         );
 
     }
 
     public static EntityManager getEntityManager() {
-        return ENTITY_MANAGER_FACTORY.createEntityManager();
+        return entityManagerFactory.createEntityManager();
     }
 
-    public static void initialize(String jdbsUrl, String user, String password) {
-        Map<String, String> map = new HashMap<>();
+    public static void initialize(final String jdbsUrl, final String user, final String password) {
+        final Map<String, String> map = new HashMap<>();
         map.put("javax.persistence.jdbc.url", jdbsUrl);
         map.put("javax.persistence.jdbc.user", user);
         map.put("javax.persistence.jdbc.password", password);
 
-        ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("myPersistenceUnit", map);
+        entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit", map);
     }
 }

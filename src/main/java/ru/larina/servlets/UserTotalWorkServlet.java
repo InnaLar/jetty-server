@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.userReport.UserTotalWorkByPeriodResponse;
+import ru.larina.model.dto.userReport.UserTotalWorkByPeriodRs;
 import ru.larina.service.ReportService;
 
 import java.io.IOException;
@@ -26,9 +26,9 @@ public class UserTotalWorkServlet extends HttpServlet {
         final LocalDateTime startTime = LocalDateTime.parse(req.getParameter("startDateTime"), formatter);
         final LocalDateTime stopTime = LocalDateTime.parse(req.getParameter("stopDateTime"), formatter);
 
-        final UserTotalWorkByPeriodResponse userTotalWorkByPeriodResponse = reportService.getUserTotalWorkByPeriod(userId, startTime, stopTime);
+        final UserTotalWorkByPeriodRs userTotalWorkByPeriodRs = reportService.getUserTotalWorkByPeriod(userId, startTime, stopTime);
 
-        final String jsonString = objectMapper.writeValueAsString(userTotalWorkByPeriodResponse);
+        final String jsonString = objectMapper.writeValueAsString(userTotalWorkByPeriodRs);
 
         printJson(resp, jsonString);
     }

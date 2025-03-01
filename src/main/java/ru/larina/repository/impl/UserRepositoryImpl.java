@@ -30,7 +30,7 @@ public class UserRepositoryImpl extends SimpleCrudRepository<User, Long> impleme
                 .getSingleResult();
             final int countTasks = user.getTasks().size();
             for (int i = 0; i < countTasks; i++) {
-                user.remove(user.getTasks().getFirst());
+                user.remove(user.getTasks().get(0));
             }
             em.getTransaction().commit();
         } catch (NoResultException e) {

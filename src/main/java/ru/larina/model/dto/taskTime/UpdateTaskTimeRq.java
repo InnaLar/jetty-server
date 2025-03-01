@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class UpdateTaskTimeRequest {
+public class UpdateTaskTimeRq {
     @NotNull
     @Min(0)
     private Long taskId;

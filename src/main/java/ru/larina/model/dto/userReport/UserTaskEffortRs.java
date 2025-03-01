@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.larina.model.dto.taskTime.TaskTimeShortSpent;
 
-import java.time.Duration;
+import java.util.List;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserTotalWorkByPeriodResponse {
+@AllArgsConstructor
+public class UserTaskEffortRs {
     private Long userId;
-    private Duration totalWork;
+    private List<TaskTimeShortSpent> taskEfforts;
 }

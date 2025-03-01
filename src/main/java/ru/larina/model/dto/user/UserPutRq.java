@@ -1,6 +1,5 @@
 package ru.larina.model.dto.user;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistrationRequest {
-    @NotBlank
+public class UserPutRq {
+    private Long id;
     private String email;
 }

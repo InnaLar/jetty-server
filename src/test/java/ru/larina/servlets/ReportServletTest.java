@@ -3,14 +3,14 @@ package ru.larina.servlets;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import ru.larina.model.dto.task.TaskCreationRequest;
-import ru.larina.model.dto.task.TaskCreationResponse;
-import ru.larina.model.dto.taskTime.TaskTimeResponse;
-import ru.larina.model.dto.user.UserRegistrationRequest;
-import ru.larina.model.dto.user.UserRegistrationResponse;
-import ru.larina.model.dto.userReport.UserTaskEffortResponse;
-import ru.larina.model.dto.userReport.UserTotalWorkByPeriodResponse;
-import ru.larina.model.dto.userReport.UserWorkIntervalsResponse;
+import ru.larina.model.dto.task.TaskCreationRq;
+import ru.larina.model.dto.task.TaskCreationRs;
+import ru.larina.model.dto.taskTime.TaskTimeRs;
+import ru.larina.model.dto.user.UserRegistrationRq;
+import ru.larina.model.dto.user.UserRegistrationRs;
+import ru.larina.model.dto.userReport.UserTaskEffortRs;
+import ru.larina.model.dto.userReport.UserTotalWorkByPeriodRs;
+import ru.larina.model.dto.userReport.UserWorkIntervalsRs;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
@@ -19,58 +19,58 @@ public class ReportServletTest extends IntegrationTestBase {
     @Test
     void getUserEffortShouldBeSuccess() {
         //GIVEN
-        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRq requestUser = UserRegistrationRq.builder()
             .email("test@mail.ru")
             .build();
 
-        final UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationRs responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
             .retrieve()
-            .bodyToMono(UserRegistrationResponse.class)
+            .bodyToMono(UserRegistrationRs.class)
             .block();
 
         assert responseUser != null;
 
-        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRq requestTask = TaskCreationRq.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
-        final TaskCreationResponse responseTask = webClient.post()
+        final TaskCreationRs responseTask = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestTask)
             .retrieve()
-            .bodyToMono(TaskCreationResponse.class)
+            .bodyToMono(TaskCreationRs.class)
             .block();
 
         Assertions.assertThat(responseTask).isNotNull();
 
-        final TaskTimeResponse responseTaskTimeStart = webClient.post()
+        final TaskTimeRs responseTaskTimeStart = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/start")
                 .queryParam("taskId", responseTask.getId())
                 .build())
             .retrieve()
-            .bodyToMono(TaskTimeResponse.class)
+            .bodyToMono(TaskTimeRs.class)
             .block();
         Assertions.assertThat(responseTaskTimeStart).isNotNull();
 
-        final TaskTimeResponse responseTaskTimeStop = webClient.post()
+        final TaskTimeRs responseTaskTimeStop = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/stop")
                 .queryParam("taskId", responseTask.getId())
                 .build())
             .retrieve()
-            .bodyToMono(TaskTimeResponse.class)
+            .bodyToMono(TaskTimeRs.class)
             .block();
         Assertions.assertThat(responseTaskTimeStop).isNotNull();
 
         //WHEN
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        final UserTaskEffortResponse response = webClient.get()
+        final UserTaskEffortRs response = webClient.get()
             .uri(uriBuilder -> uriBuilder.path("api/v1/report/getUserTaskEfforts")
                 .queryParam("userId", responseUser.getId())
                 .queryParam("startDateTime", responseTaskTimeStart.getStartDateTime()
@@ -81,7 +81,7 @@ public class ReportServletTest extends IntegrationTestBase {
                     .format(formatter))
                 .build())
             .retrieve()
-            .bodyToMono(UserTaskEffortResponse.class)
+            .bodyToMono(UserTaskEffortRs.class)
             .block();
 
         //THEN
@@ -94,58 +94,58 @@ public class ReportServletTest extends IntegrationTestBase {
     @Test
     void getUserWorkIntervalShouldBeSuccess() {
         //GIVEN
-        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRq requestUser = UserRegistrationRq.builder()
             .email("test@mail.ru")
             .build();
 
-        final UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationRs responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
             .retrieve()
-            .bodyToMono(UserRegistrationResponse.class)
+            .bodyToMono(UserRegistrationRs.class)
             .block();
 
         assert responseUser != null;
 
-        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRq requestTask = TaskCreationRq.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
-        final TaskCreationResponse responseTask = webClient.post()
+        final TaskCreationRs responseTask = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestTask)
             .retrieve()
-            .bodyToMono(TaskCreationResponse.class)
+            .bodyToMono(TaskCreationRs.class)
             .block();
 
         Assertions.assertThat(responseTask).isNotNull();
 
-        final TaskTimeResponse responseTaskTimeStart = webClient.post()
+        final TaskTimeRs responseTaskTimeStart = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/start")
                 .queryParam("taskId", responseTask.getId())
                 .build())
             .retrieve()
-            .bodyToMono(TaskTimeResponse.class)
+            .bodyToMono(TaskTimeRs.class)
             .block();
         Assertions.assertThat(responseTaskTimeStart).isNotNull();
 
-        final TaskTimeResponse responseTaskTimeStop = webClient.post()
+        final TaskTimeRs responseTaskTimeStop = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/stop")
                 .queryParam("taskId", responseTask.getId())
                 .build())
             .retrieve()
-            .bodyToMono(TaskTimeResponse.class)
+            .bodyToMono(TaskTimeRs.class)
             .block();
         Assertions.assertThat(responseTaskTimeStop).isNotNull();
 
         //WHEN
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        final UserWorkIntervalsResponse response = webClient.get()
+        final UserWorkIntervalsRs response = webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/report/getUserWorkIntervalsByPeriod")
                 .queryParam("userId", responseUser.getId())
@@ -157,7 +157,7 @@ public class ReportServletTest extends IntegrationTestBase {
                     .format(formatter))
                 .build())
             .retrieve()
-            .bodyToMono(UserWorkIntervalsResponse.class)
+            .bodyToMono(UserWorkIntervalsRs.class)
             .block();
 
         //THEN
@@ -176,58 +176,58 @@ public class ReportServletTest extends IntegrationTestBase {
     @Test
     void getUserTotalWorkShouldBeSuccess() {
         //GIVEN
-        final UserRegistrationRequest requestUser = UserRegistrationRequest.builder()
+        final UserRegistrationRq requestUser = UserRegistrationRq.builder()
             .email("test@mail.ru")
             .build();
 
-        final UserRegistrationResponse responseUser = webClient.post()
+        final UserRegistrationRs responseUser = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestUser)
             .retrieve()
-            .bodyToMono(UserRegistrationResponse.class)
+            .bodyToMono(UserRegistrationRs.class)
             .block();
 
         assert responseUser != null;
 
-        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRq requestTask = TaskCreationRq.builder()
             .userId(responseUser.getId())
             .name("task1")
             .build();
 
-        final TaskCreationResponse responseTask = webClient.post()
+        final TaskCreationRs responseTask = webClient.post()
             .uri("api/v1/task")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestTask)
             .retrieve()
-            .bodyToMono(TaskCreationResponse.class)
+            .bodyToMono(TaskCreationRs.class)
             .block();
 
         Assertions.assertThat(responseTask).isNotNull();
 
-        final TaskTimeResponse responseTaskTimeStart = webClient.post()
+        final TaskTimeRs responseTaskTimeStart = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/start")
                 .queryParam("taskId", responseTask.getId())
                 .build())
             .retrieve()
-            .bodyToMono(TaskTimeResponse.class)
+            .bodyToMono(TaskTimeRs.class)
             .block();
         Assertions.assertThat(responseTaskTimeStart).isNotNull();
 
-        final TaskTimeResponse responseTaskTimeStop = webClient.post()
+        final TaskTimeRs responseTaskTimeStop = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/task-time/stop")
                 .queryParam("taskId", responseTask.getId())
                 .build())
             .retrieve()
-            .bodyToMono(TaskTimeResponse.class)
+            .bodyToMono(TaskTimeRs.class)
             .block();
         Assertions.assertThat(responseTaskTimeStop).isNotNull();
 
         //WHEN
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        final UserTotalWorkByPeriodResponse response = webClient.get()
+        final UserTotalWorkByPeriodRs response = webClient.get()
             .uri(uriBuilder -> uriBuilder
                 .path("api/v1/report/getUserTotalWorkByPeriod")
                 .queryParam("userId", responseUser.getId())
@@ -239,7 +239,7 @@ public class ReportServletTest extends IntegrationTestBase {
                     .format(formatter))
                 .build())
             .retrieve()
-            .bodyToMono(UserTotalWorkByPeriodResponse.class)
+            .bodyToMono(UserTotalWorkByPeriodRs.class)
             .block();
 
         //THEN

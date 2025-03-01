@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.task.TaskCreationRequest;
-import ru.larina.model.dto.task.TaskCreationResponse;
+import ru.larina.model.dto.task.TaskCreationRq;
+import ru.larina.model.dto.task.TaskCreationRs;
 import ru.larina.service.TaskService;
 
 import java.io.IOException;
@@ -27,9 +27,9 @@ public class TaskServlet extends HttpServlet {
         try (Scanner scanner = new Scanner(req.getInputStream(), StandardCharsets.UTF_8)) {
             jsonData = scanner.useDelimiter("\\A").next();
         }
-        final TaskCreationRequest taskCreationRequest = objectMapper.readValue(jsonData, TaskCreationRequest.class);
-        final TaskCreationResponse taskCreationResponse = taskService.save(taskCreationRequest);
-        final String jsonString = objectMapper.writeValueAsString(taskCreationResponse);
+        final TaskCreationRq taskCreationRq = objectMapper.readValue(jsonData, TaskCreationRq.class);
+        final TaskCreationRs taskCreationRs = taskService.save(taskCreationRq);
+        final String jsonString = objectMapper.writeValueAsString(taskCreationRs);
         printJson(resp, jsonString);
 
     }

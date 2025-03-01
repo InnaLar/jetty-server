@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.taskTime.TaskTimeResponse;
+import ru.larina.model.dto.taskTime.TaskTimeRs;
 import ru.larina.service.TaskTimesService;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class TaskTimeStopServlet extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final Long taskId = Long.valueOf(req.getParameter("taskId"));
-        final TaskTimeResponse response = taskTimeService.stop(taskId);
+        final TaskTimeRs response = taskTimeService.stop(taskId);
         final String jsonString = objectMapper.writeValueAsString(response);
         printJson(resp, jsonString);
     }

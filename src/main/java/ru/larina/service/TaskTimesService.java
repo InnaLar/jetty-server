@@ -1,25 +1,25 @@
 package ru.larina.service;
 
-import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.larina.exception.ErrorCode;
 import ru.larina.exception.ServiceException;
-import ru.larina.hibernate.EmFactory;
 import ru.larina.mapper.TaskTimeMapper;
 import ru.larina.mapper.UserMapper;
 import ru.larina.model.dto.taskTime.TaskTimeId;
-import ru.larina.model.dto.taskTime.TaskTimeResponse;
-import ru.larina.model.dto.userClear.UserTaskTimeClearResponse;
+import ru.larina.model.dto.taskTime.TaskTimeRs;
+import ru.larina.model.dto.userClear.UserTaskTimeClearRs;
 import ru.larina.model.entity.Task;
 import ru.larina.model.entity.TaskTime;
 import ru.larina.model.entity.User;
-import ru.larina.repository.TaskRepository;
-import ru.larina.repository.TaskTimeRepository;
-import ru.larina.repository.UserRepository;
+import ru.larina.repository.jpa.TaskRepository;
+import ru.larina.repository.jpa.TaskTimeRepository;
+import ru.larina.repository.jpa.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 @AllArgsConstructor
 public class TaskTimesService {
     private final TaskTimeRepository taskTimeRepository;
@@ -28,7 +28,7 @@ public class TaskTimesService {
     private final UserMapper userMapper;
     private final TaskTimeMapper taskTimeMapper;
 
-    public TaskTimeResponse start(final Long taskId) {
+    public TaskTimeRs start(final Long taskId) {
         final Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_002, taskId));
 
@@ -41,25 +41,11 @@ public class TaskTimesService {
         return taskTimeMapper.taskTimeToTaskTimeResponse(taskTimeAdded);
     }
 
-    public TaskTimeResponse stop(final Long taskId) {
-        try (EntityManager em = EmFactory.getEntityManager()) {
-            em.getTransaction().begin();
-            final TaskTime taskTime = taskTimeRepository.findFirstByTaskIdOrderByIdDesc(taskId)
-                .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_004, taskId));
-            taskTime.setStopTime(LocalDateTime.now());
-            em.merge(taskTime);
-            em.getTransaction().commit();
-            return taskTimeMapper.taskTimeToTaskTimeResponse(taskTime);
-        }
-    }
-
-    public UserTaskTimeClearResponse clearByUser(final Long userId) {
-        taskTimeRepository.clearByUser(userId);
-        try (EntityManager em = EmFactory.getEntityManager()) {
-            final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_001, userId));
-            final List<TaskTimeId> taskTimeIds = taskTimeRepository.getTaskTimesByUser(userId);
-            return userMapper.userToUserTaskTimeClearResponse(user, taskTimeIds);
-        }
+    public TaskTimeRs stop(final Long taskId) {
+        final TaskTime taskTime = taskTimeRepository.findFirstByTaskIdOrderByIdDesc(taskId)
+            .orElseThrow(() -> new ServiceException(ErrorCode.ERR_CODE_004, taskId));
+        taskTime.setStopTime(LocalDateTime.now());
+        final TaskTime taskTimeUpdated = taskTimeRepository.save(taskTime);
+        return taskTimeMapper.taskTimeToTaskTimeResponse(taskTimeUpdated);
     }
 }

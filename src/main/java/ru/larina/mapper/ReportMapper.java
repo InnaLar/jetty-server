@@ -6,6 +6,7 @@ import ru.larina.model.projections.TaskTimeLongSpentProjection;
 import ru.larina.model.projections.TaskTimeShortSpentProjection;
 import ru.larina.service.SecondToDuration;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,7 +14,7 @@ public class ReportMapper {
     public TaskTimeShortSpent taskTimeShortSpentProjectionToTaskTimeShortSpent(final TaskTimeShortSpentProjection projection) {
         return TaskTimeShortSpent.builder()
             .taskId(projection.getId())
-            .timeSpent(SecondToDuration.getDurationfromSeconds(projection.getSumTime().longValue()))
+            .timeSpent(Duration.ofNanos(projection.getSumTime().longValue()))
             .build();
     }
 

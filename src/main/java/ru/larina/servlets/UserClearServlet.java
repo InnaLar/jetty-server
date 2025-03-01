@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.userClear.UserDeleteTasksResponse;
+import ru.larina.model.dto.userClear.UserDeleteTasksRs;
 import ru.larina.service.UserService;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class UserClearServlet extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final Long userId = Long.valueOf(req.getParameter("userId"));
-        final UserDeleteTasksResponse userTaskTimeClearResponse = userService.deleteTasksByUser(userId);
+        final UserDeleteTasksRs userTaskTimeClearResponse = userService.deleteTasksByUser(userId);
         final String jsonString = objectMapper.writeValueAsString(userTaskTimeClearResponse);
         printJson(resp, jsonString);
     }

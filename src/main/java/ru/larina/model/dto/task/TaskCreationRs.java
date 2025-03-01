@@ -1,4 +1,4 @@
-package ru.larina.model.dto.userClear;
+package ru.larina.model.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDeleteTasksResponse {
+public class TaskCreationRs {
+    private Long id;
+    private String nameTask;
     private Long userId;
 }

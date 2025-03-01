@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import ru.larina.model.dto.userReport.UserWorkIntervalsResponse;
+import ru.larina.model.dto.userReport.UserWorkIntervalsRs;
 import ru.larina.service.ReportService;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class UserWorkIntervalsServlet extends HttpServlet {
         final Long userId = Long.valueOf(req.getParameter("userId"));
         final LocalDateTime startTime = LocalDateTime.parse(req.getParameter("startDateTime"), formatter);
         final LocalDateTime stopTime = LocalDateTime.parse(req.getParameter("stopDateTime"), formatter);
-        final UserWorkIntervalsResponse userTaskEffortResponse = reportService.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
+        final UserWorkIntervalsRs userTaskEffortResponse = reportService.getUserWorkIntervalByPeriods(userId, startTime, stopTime);
         final String jsonString = objectMapper.writeValueAsString(userTaskEffortResponse);
 
         printJson(resp, jsonString);

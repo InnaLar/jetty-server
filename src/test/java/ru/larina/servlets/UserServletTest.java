@@ -5,12 +5,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.larina.hibernate.EmFactory;
-import ru.larina.model.dto.task.TaskCreationRequest;
-import ru.larina.model.dto.userClear.UserDeleteTasksResponse;
-import ru.larina.model.dto.user.UserPutRequest;
-import ru.larina.model.dto.user.UserPutResponse;
-import ru.larina.model.dto.user.UserRegistrationRequest;
-import ru.larina.model.dto.user.UserRegistrationResponse;
+import ru.larina.model.dto.task.TaskCreationRq;
+import ru.larina.model.dto.user.UserPutRq;
+import ru.larina.model.dto.user.UserPutRs;
+import ru.larina.model.dto.user.UserRegistrationRq;
+import ru.larina.model.dto.user.UserRegistrationRs;
+import ru.larina.model.dto.userClear.UserDeleteTasksRs;
 import ru.larina.model.entity.User;
 
 @SuppressWarnings("UnusedLocalVariable")
@@ -19,17 +19,17 @@ class UserServletTest extends IntegrationTestBase {
     @Test
     void addUserShouldSuccess() {
         //GIVEN
-        final UserRegistrationRequest request = UserRegistrationRequest.builder()
+        final UserRegistrationRq request = UserRegistrationRq.builder()
             .email("test@mail.ru")
             .build();
 
         //WHEN
-        final UserRegistrationResponse response = webClient.post()
+        final UserRegistrationRs response = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .retrieve()
-            .bodyToMono(UserRegistrationResponse.class)
+            .bodyToMono(UserRegistrationRs.class)
             .block();
 
         //THEN
@@ -51,31 +51,31 @@ class UserServletTest extends IntegrationTestBase {
     @Test
     void updateUserShouldSuccess() throws InterruptedException {
         //GIVEN
-        final UserRegistrationRequest request = UserRegistrationRequest.builder()
+        final UserRegistrationRq request = UserRegistrationRq.builder()
             .email("test12234@mail.ru")
             .build();
 
-        final UserRegistrationResponse response = webClient.post()
+        final UserRegistrationRs response = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .retrieve()
-            .bodyToMono(UserRegistrationResponse.class)
+            .bodyToMono(UserRegistrationRs.class)
             .block();
 
         assert response != null;
-        final UserPutRequest requestForUpdate = UserPutRequest.builder()
+        final UserPutRq requestForUpdate = UserPutRq.builder()
             .id(response.getId())
             .email("InnaLarrgj@mail.ru")
             .build();
 
         //WHEN
-        final UserPutResponse responseUpdated = webClient.put()
+        final UserPutRs responseUpdated = webClient.put()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(requestForUpdate)
             .retrieve()
-            .bodyToMono(UserPutResponse.class)
+            .bodyToMono(UserPutRs.class)
             .block();
 
         //THEN
@@ -97,32 +97,32 @@ class UserServletTest extends IntegrationTestBase {
     @Test
     void deleteUserTasksShouldSuccess() {
         //GIVEN
-        final UserRegistrationRequest request = UserRegistrationRequest.builder()
+        final UserRegistrationRq request = UserRegistrationRq.builder()
             .email("test3@mail.ru")
             .build();
 
-        final UserRegistrationResponse response = webClient.post()
+        final UserRegistrationRs response = webClient.post()
             .uri("/api/v1/user")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .retrieve()
-            .bodyToMono(UserRegistrationResponse.class)
+            .bodyToMono(UserRegistrationRs.class)
             .block();
 
         Assertions.assertThat(response).isNotNull();
 
-        final TaskCreationRequest requestTask = TaskCreationRequest.builder()
+        final TaskCreationRq requestTask = TaskCreationRq.builder()
             .userId(response.getId())
             .name("task1")
             .build();
 
         //WHEN
-        final UserDeleteTasksResponse responseDeleteUserTasks = webClient.post()
+        final UserDeleteTasksRs responseDeleteUserTasks = webClient.post()
             .uri(uriBuilder -> uriBuilder.path("api/v1/user/clear")
                 .queryParam("userId", response.getId())
                 .build())
             .retrieve()
-            .bodyToMono(UserDeleteTasksResponse.class)
+            .bodyToMono(UserDeleteTasksRs.class)
             .block();
         //THEN
         Assertions.assertThat(responseDeleteUserTasks).isNotNull();

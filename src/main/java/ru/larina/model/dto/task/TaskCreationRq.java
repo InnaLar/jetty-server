@@ -1,4 +1,4 @@
-package ru.larina.model.dto.user;
+package ru.larina.model.dto.task;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPutResponse {
-    private Long id;
-    private String eml;
+public class TaskCreationRq {
+    private String name;
+    private Long userId;
 }
